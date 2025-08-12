@@ -3,7 +3,7 @@
 import * as React from "react";
 import * as RechartsPrimitive from "recharts";
 import type { TooltipContentProps } from "recharts";
-import { cn } from "./utils";
+import { cn } from "../../lib/utils";
 
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: "", dark: ".dark" } as const;
@@ -261,13 +261,12 @@ function ChartLegendContent({
   payload,
   verticalAlign = "bottom",
   nameKey,
-}: React.ComponentProps<"div"> &
-  {
-    hideIcon?: boolean;
-    nameKey?: string;
-    payload?: any[];
-    verticalAlign?: "top" | "bottom" | "middle";
-  }) {
+}: React.ComponentProps<"div"> & {
+  hideIcon?: boolean;
+  nameKey?: string;
+  payload?: any[];
+  verticalAlign?: "top" | "bottom" | "middle";
+}) {
   const { config } = useChart();
 
   if (!payload?.length) {
