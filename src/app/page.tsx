@@ -1,15 +1,17 @@
+"use client";
+
 import LandingPage from "@/components/LandingPage";
-import Image from "next/image";
 
 export default function Home() {
   return (
-    <section className="border-4 border-amber-400 flex flex-col justify-center items-center h-screen bg-secondary-foreground">
-      {/* <LandingPage
+    <>
+      <LandingPage
         onGetStarted={() => {}}
         onNavigate={() => {}}
         onSignIn={() => {}}
-      /> */}
-    </section>
+      />
+      {/* <h3 className="">Fill me up Jesus</h3> */}
+    </>
   );
 }
 
