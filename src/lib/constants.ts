@@ -15,17 +15,15 @@ import {
 } from "lucide-react";
 
 import type {
-  PlatformFeature,
-  CommunityStat,
-  AboutStat,
-  CommunityProfile,
   FAQ,
+  AboutStat,
+  CommunityStat,
   ContactMethod,
+  PlatformFeature,
+  CommunityProfile,
 } from "./type";
 
-export const logoImage: string =
-  "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiMxNjgzM2EiLz4KPHRleHQgeD0iMjAiIHk9IjI1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iYm9sZCI+RDlqPC90ZXh0Pgo8L3N2Zz4K";
-
+export const logoImage: string = "/logo.png";
 export const promoImage: string = "/api/placeholder/600/400";
 export const communityGridImage: string = "/api/placeholder/800/600";
 

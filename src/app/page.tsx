@@ -1,5 +1,9 @@
-import LandingPageWrapper from "@/components/LandingPageWrapper";
+import { LandingPage } from "@/components/landing-page";
 
 export default function Home() {
-  return <LandingPageWrapper />;
+  return (
+    <div className="min-h-screen">
+      <LandingPage />
+    </div>
+  );
 }

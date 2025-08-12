@@ -301,3 +301,7 @@
 .animate-pulse-glow {
   animation: pulse-glow 2s ease-in-out infinite;
 }
+
+.lucide {
+  stroke-width: 1.5px;
+}
