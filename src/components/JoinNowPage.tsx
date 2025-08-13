@@ -14,7 +14,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
-import logoImage from "figma:asset/0be1b3fe61946b6a71598093280579589812311d.png";
+import { logoImage } from "@/lib/constants";
 
 interface JoinNowPageProps {
   onBack: () => void;
