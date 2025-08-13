@@ -43,7 +43,7 @@ export const platformFeatures: PlatformFeature[] = [
     bgColor: "bg-primary/10",
     gradient: "from-primary/20 to-primary/5",
     stats: "250+ articles weekly",
-    features: ["Real-time updates", "Expert analysis", "Global coverage"],
+    features: ["Expert analysis", "Global coverage", "Real-time updates"],
   },
   {
     id: "investment",
@@ -55,7 +55,7 @@ export const platformFeatures: PlatformFeature[] = [
     bgColor: "bg-accent/10",
     gradient: "from-accent/20 to-accent/5",
     stats: "$50M+ deals showcased",
-    features: ["Vetted opportunities", "Due diligence", "Investor network"],
+    features: ["Due diligence", "Investor network", "Vetted opportunities"],
   },
   {
     id: "business",
@@ -67,7 +67,7 @@ export const platformFeatures: PlatformFeature[] = [
     bgColor: "bg-primary/10",
     gradient: "from-primary/20 to-primary/5",
     stats: "5,000+ businesses listed",
-    features: ["Global directory", "Verified listings", "Direct connections"],
+    features: ["Verified listings", "Global directory", "Direct connections"],
   },
   {
     id: "blog",
@@ -79,7 +79,7 @@ export const platformFeatures: PlatformFeature[] = [
     bgColor: "bg-accent/10",
     gradient: "from-accent/20 to-accent/5",
     stats: "1,000+ stories shared",
-    features: ["Personal journeys", "Success stories", "Cultural insights"],
+    features: ["Success stories", "Cultural insights", "Personal journeys"],
   },
 ];
 
