@@ -30,8 +30,8 @@ export function LandingPage() {
       <CommunityStatsSection onGetStarted={handleGetStarted} />
       <PlatformSection onGetStarted={handleGetStarted} />
       <CommunityShowcaseSection onGetStarted={handleGetStarted} />
-      <FAQSection />
       <TestimonialsSection />
+      <FAQSection />
       <CallToActionSection onGetStarted={handleGetStarted} />
       <ContactSection />
       <Footer />

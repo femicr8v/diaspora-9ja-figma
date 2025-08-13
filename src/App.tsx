@@ -2,6 +2,9 @@ import { useState } from "react";
 import LandingPage from "./components/LandingPage";
 import SignInPage from "./components/SignInPage";
 import RegistrationPage from "./components/RegistrationPage";
+import JoinNowPage from "./components/JoinNowPage";
+import PaymentModal from "./components/PaymentModal";
+import ThankYouPage from "./components/ThankYouPage";
 import WelcomeScreen from "./components/WelcomeScreen";
 import NewsPage from "./components/NewsPage";
 import InvestmentPage from "./components/InvestmentPage";
@@ -15,6 +18,8 @@ type PageType =
   | "landing"
   | "signin"
   | "registration"
+  | "joinnow"
+  | "thankyou"
   | "welcome"
   | "news"
   | "investment"
@@ -23,14 +28,23 @@ type PageType =
   | "membership"
   | "dashboard";
 
+interface UserData {
+  name: string;
+  email: string;
+  phone?: string;
+}
+
 export default function App() {
   const [currentPage, setCurrentPage] = useState<PageType>("landing");
-  const [userData, setUserData] = useState<{
-    name: string;
-    email: string;
-  } | null>(null);
+  const [userData, setUserData] = useState<UserData | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isPremiumMember, setIsPremiumMember] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [joinFormData, setJoinFormData] = useState<{
+    fullName: string;
+    email: string;
+    phone: string;
+  } | null>(null);
 
   const navigateToPage = (page: PageType) => {
     // Protect content pages - redirect to sign in if not logged in
@@ -53,12 +67,45 @@ export default function App() {
 
   const navigateToSignIn = () => setCurrentPage("signin");
   const navigateToRegistration = () => setCurrentPage("registration");
+  const navigateToJoinNow = () => setCurrentPage("joinnow");
+  const navigateToLanding = () => setCurrentPage("landing");
+
+  // Handle the new join flow
+  const handleShowPayment = (formData: {
+    fullName: string;
+    email: string;
+    phone: string;
+  }) => {
+    setJoinFormData(formData);
+    setShowPaymentModal(true);
+  };
+
+  const handlePaymentSuccess = () => {
+    if (joinFormData) {
+      // Set user data and mark as premium member
+      setUserData({
+        name: joinFormData.fullName,
+        email: joinFormData.email,
+        phone: joinFormData.phone,
+      });
+      setIsLoggedIn(true);
+      setIsPremiumMember(true);
+      setShowPaymentModal(false);
+      setCurrentPage("thankyou");
+    }
+  };
+
+  const handleClosePaymentModal = () => {
+    setShowPaymentModal(false);
+    setJoinFormData(null);
+  };
+
+  // Existing handlers
   const navigateToWelcome = (user: { name: string; email: string }) => {
     setUserData(user);
     setIsLoggedIn(true);
     setCurrentPage("welcome");
   };
-  const navigateToLanding = () => setCurrentPage("landing");
 
   const handleSignIn = (user: { name: string; email: string }) => {
     setUserData(user);
@@ -79,10 +126,16 @@ export default function App() {
     setCurrentPage("dashboard");
   };
 
+  const handleGoToDashboard = () => {
+    setCurrentPage("dashboard");
+  };
+
   const showHeader =
     currentPage !== "landing" &&
     currentPage !== "signin" &&
     currentPage !== "registration" &&
+    currentPage !== "joinnow" &&
+    currentPage !== "thankyou" &&
     currentPage !== "welcome";
 
   return (
@@ -95,15 +148,30 @@ export default function App() {
           isPremiumMember={isPremiumMember}
           userName={userData?.name}
           onSignOut={handleSignOut}
-          onJoinNow={navigateToRegistration}
+          onJoinNow={navigateToJoinNow}
         />
       )}
 
       {currentPage === "landing" && (
         <LandingPage
-          onGetStarted={navigateToRegistration}
+          onGetStarted={navigateToJoinNow}
           onNavigate={navigateToPage}
           onSignIn={navigateToSignIn}
+        />
+      )}
+
+      {currentPage === "joinnow" && (
+        <JoinNowPage
+          onBack={navigateToLanding}
+          onShowPayment={handleShowPayment}
+        />
+      )}
+
+      {currentPage === "thankyou" && userData && (
+        <ThankYouPage
+          userName={userData.name}
+          onGoToDashboard={handleGoToDashboard}
+          onReturnHome={navigateToLanding}
         />
       )}
 
@@ -142,21 +210,18 @@ export default function App() {
           )}
           {currentPage === "investment" && (
             <InvestmentPage
-              // @ts-ignore
               isPremium={isPremiumMember}
               onUpgrade={() => navigateToPage("membership")}
             />
           )}
           {currentPage === "business" && (
             <BusinessPage
-              // @ts-ignore
               isPremium={isPremiumMember}
               onUpgrade={() => navigateToPage("membership")}
             />
           )}
           {currentPage === "blog" && (
             <BlogPage
-              // @ts-ignore
               isPremium={isPremiumMember}
               onUpgrade={() => navigateToPage("membership")}
             />
@@ -175,6 +240,16 @@ export default function App() {
             />
           )}
         </>
+      )}
+
+      {/* Payment Modal */}
+      {showPaymentModal && joinFormData && (
+        <PaymentModal
+          isOpen={showPaymentModal}
+          onClose={handleClosePaymentModal}
+          onSuccess={handlePaymentSuccess}
+          userInfo={joinFormData}
+        />
       )}
     </div>
   );
