@@ -242,7 +242,7 @@ export function CommunityStatsSection({
                 <button
                   key={index}
                   onClick={() => handleDotClick(index)}
-                  className={`w-2 h-2 md:w-3 md:h-3 rounded-full transition-all duration-300 ${
+                  className={`size-2 md:size-3 rounded-full transition-all duration-300 ${
                     index === membersSlide
                       ? "bg-primary scale-110 shadow-lg"
                       : "bg-muted hover:bg-muted-foreground/50"

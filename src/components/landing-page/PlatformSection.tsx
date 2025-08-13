@@ -115,8 +115,8 @@ export function PlatformSection({ onGetStarted }: PlatformSectionProps) {
           onMouseEnter={() => setIsAutoScrollPaused(true)}
           onMouseLeave={() => setIsAutoScrollPaused(false)}
         >
-          {/* Carousel Container */}
-          <div className="overflow-hidden rounded-2xl">
+          {/* Carousel Container shadow-2xl */}
+          <div className="overflow-hidden">
             <div
               className="flex transition-transform duration-700 ease-out"
               style={{ transform: `translateX(-${currentSlide * 100}%)` }}
@@ -126,10 +126,11 @@ export function PlatformSection({ onGetStarted }: PlatformSectionProps) {
             >
               {platformFeatures.map((feature) => {
                 const Icon = feature.icon;
+
                 return (
                   <div key={feature.id} className="w-full flex-shrink-0 px-4">
                     <Card
-                      className={`h-full min-h-[500px] md:min-h-[600px] bg-gradient-to-br ${feature.gradient} relative overflow-hidden shadow-2xl border-0`}
+                      className={`h-full min-h-[500px] md:min-h-[600px] bg-gradient-to-br ${feature.gradient} relative overflow-hidden border-0`}
                     >
                       <div
                         className={`absolute inset-0 ${repeatingPlusWhitePattern} opacity-60`}
@@ -155,8 +156,11 @@ export function PlatformSection({ onGetStarted }: PlatformSectionProps) {
 
                         <div className="flex flex-col items-center justify-center md:flex-row gap-4 md:gap-6 mb-6 md:mb-8">
                           {feature.features.map((item, idx) => (
-                            <div key={idx} className="text-center">
-                              <CheckCircle className="w-5 md:w-6 h-5 md:h-6 text-green-500 mx-auto mb-2" />
+                            <div
+                              key={idx}
+                              className="flex md:flex-col gap-2 justify-center items-center text-center"
+                            >
+                              <CheckCircle className="size-5 md:size-6 text-green-500" />
                               <p className="text-xs md:text-sm text-muted-foreground font-medium">
                                 {item}
                               </p>
@@ -164,10 +168,10 @@ export function PlatformSection({ onGetStarted }: PlatformSectionProps) {
                           ))}
                         </div>
 
-                        <div className="mb-6 md:mb-8">
+                        <div className="mb-4 md:mb-6">
                           <Badge
                             variant="secondary"
-                            className="bg-white/20 text-foreground border-white/30 text-sm md:text-base font-semibold px-4 py-2"
+                            className="bg-white/30 text-foreground border-white/40 text-sm md:text-base font-semibold px-4 py-2"
                           >
                             {feature.stats}
                           </Badge>
@@ -198,9 +202,9 @@ export function PlatformSection({ onGetStarted }: PlatformSectionProps) {
                 key={index}
                 onClick={() => handleSlideChange(index)}
                 aria-label={`Go to slide ${index + 1}`}
-                className={`w-3 md:w-4 h-3 md:h-4 rounded-full transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
+                className={`size-2 md:size-3 rounded-full transition-all duration-300 hover:scale-110 active:scale-110 ${
                   index === currentSlide
-                    ? "bg-primary scale-125 shadow-lg"
+                    ? "bg-primary scale-110 shadow-lg"
                     : "bg-muted hover:bg-muted-foreground/50"
                 }`}
               />
