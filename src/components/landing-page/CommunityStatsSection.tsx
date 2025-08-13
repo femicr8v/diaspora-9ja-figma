@@ -2,11 +2,11 @@
 
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
-import { useState, useEffect, useCallback } from "react";
+import { ArrowRight } from "lucide-react";
 import { Card, CardContent } from "../ui/card";
+import { useState, useEffect, useCallback } from "react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { communityStats, communityProfiles } from "@/lib/constants";
-import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 
 interface CommunityStatsSectionProps {
   onGetStarted: () => void;
@@ -40,8 +40,12 @@ export function CommunityStatsSection({
     return () => window.removeEventListener("resize", updateItemsPerView);
   }, [updateItemsPerView]);
 
-  // Calculate max slides
-  const maxSlides = Math.max(0, communityProfiles.length - itemsPerView);
+  // Calculate slides per page (how many cards to advance at once)
+  const slidesPerPage = itemsPerView;
+
+  // Calculate total number of pages
+  const totalPages = Math.ceil(communityProfiles.length / slidesPerPage);
+  const maxSlides = Math.max(0, totalPages - 1);
 
   // Auto-scroll carousel for members
   useEffect(() => {
@@ -65,16 +69,16 @@ export function CommunityStatsSection({
       setMembersSlide((prev) => Math.max(prev - 1, 0));
     }
 
-    // Resume auto-scroll after 5 seconds
-    setTimeout(() => setIsAutoScrollPaused(false), 5000);
+    // Resume auto-scroll after 3 seconds
+    setTimeout(() => setIsAutoScrollPaused(false), 3000);
   };
 
   const handleDotClick = (index: number) => {
     setIsAutoScrollPaused(true);
     setMembersSlide(Math.min(index, maxSlides));
 
-    // Resume auto-scroll after 5 seconds
-    setTimeout(() => setIsAutoScrollPaused(false), 5000);
+    // Resume auto-scroll after 3 seconds
+    setTimeout(() => setIsAutoScrollPaused(false), 3000);
   };
 
   // Handle keyboard navigation
@@ -183,80 +187,67 @@ export function CommunityStatsSection({
             <div
               className="flex transition-transform duration-500 ease-out"
               style={{
-                transform: `translateX(-${
-                  membersSlide * (100 / itemsPerView)
-                }%)`,
+                transform: `translateX(-${membersSlide * 100}%)`,
               }}
             >
-              {communityProfiles.map((profile, index) => (
-                <div
-                  key={index}
-                  className="w-full md:w-1/2 lg:w-1/3 flex-shrink-0 px-3"
-                >
-                  <Card className="border-border/40 bg-background/90 hover:shadow-lg transition-all duration-300 group">
-                    <CardContent className="p-6 text-center">
-                      <div className="w-16 md:w-20 h-16 md:h-20 mx-auto mb-4 rounded-full overflow-hidden group-hover:scale-105 transition-transform duration-300">
-                        <ImageWithFallback
-                          src={profile.image}
-                          alt={profile.name}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      <h4 className="text-sm md:text-base font-semibold text-foreground mb-1">
-                        {profile.name}
-                      </h4>
-                      <p className="text-xs md:text-sm text-muted-foreground mb-1">
-                        {profile.role}
-                      </p>
-                      <p className="text-xs md:text-sm text-accent font-medium mb-2">
-                        {profile.location}
-                      </p>
-                      <Badge
-                        variant="secondary"
-                        className="text-xs bg-primary/10 text-primary border-primary/20"
+              {Array.from({ length: totalPages }, (_, pageIndex) => (
+                <div key={pageIndex} className="w-full flex-shrink-0 flex">
+                  {communityProfiles
+                    .slice(
+                      pageIndex * slidesPerPage,
+                      (pageIndex + 1) * slidesPerPage
+                    )
+                    .map((profile, index) => (
+                      <div
+                        key={`${pageIndex}-${index}`}
+                        className="w-full md:w-1/2 lg:w-1/3 flex-shrink-0 px-3"
                       >
-                        {profile.industry}
-                      </Badge>
-                    </CardContent>
-                  </Card>
+                        <Card className="border-border/40 bg-background/90 hover:shadow-lg transition-all duration-300 group">
+                          <CardContent className="p-6 text-center">
+                            <div className="border border-accent/40 w-16 md:w-20 h-16 md:h-20 mx-auto mb-4 rounded-full overflow-hidden group-hover:scale-105 transition-transform duration-300">
+                              <ImageWithFallback
+                                src={profile.image}
+                                alt={profile.name}
+                                className="size-full object-cover"
+                              />
+                            </div>
+                            <h4 className="text-sm md:text-base font-semibold text-foreground mb-1">
+                              {profile.name}
+                            </h4>
+                            <p className="text-xs md:text-sm text-muted-foreground mb-1">
+                              {profile.role}
+                            </p>
+                            <p className="text-xs md:text-sm text-accent font-medium mb-2">
+                              {profile.location}
+                            </p>
+                            <Badge
+                              variant="secondary"
+                              className="text-xs bg-primary/10 text-primary border-primary/20"
+                            >
+                              {profile.industry}
+                            </Badge>
+                          </CardContent>
+                        </Card>
+                      </div>
+                    ))}
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Navigation Arrows */}
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handleMembersSlideChange("prev")}
-            disabled={membersSlide === 0}
-            className="absolute left-2 top-1/2 transform -translate-y-1/2 rounded-full w-8 h-8 md:w-10 md:h-10 p-0 bg-white/90 hover:bg-white shadow-lg border-white/50 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handleMembersSlideChange("next")}
-            disabled={membersSlide >= maxSlides}
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 rounded-full w-8 h-8 md:w-10 md:h-10 p-0 bg-white/90 hover:bg-white shadow-lg border-white/50 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </Button>
-
           {/* Dots Indicator */}
-          {maxSlides > 0 && (
+          {totalPages > 1 && (
             <div className="flex justify-center mt-6 md:mt-8 space-x-2">
-              {Array.from({ length: maxSlides + 1 }, (_, index) => (
+              {Array.from({ length: totalPages }, (_, index) => (
                 <button
                   key={index}
                   onClick={() => handleDotClick(index)}
                   className={`w-2 h-2 md:w-3 md:h-3 rounded-full transition-all duration-300 ${
                     index === membersSlide
-                      ? "bg-primary scale-125 shadow-lg"
+                      ? "bg-primary scale-110 shadow-lg"
                       : "bg-muted hover:bg-muted-foreground/50"
                   }`}
-                  aria-label={`Go to slide ${index + 1}`}
+                  aria-label={`Go to page ${index + 1}`}
                 />
               ))}
             </div>
@@ -276,10 +267,10 @@ export function CommunityStatsSection({
           <Button
             onClick={onGetStarted}
             variant="outline"
-            className="border-primary/20 text-primary hover:bg-primary/5 text-base"
+            className="border-primary/20 text-primary hover:text-primary hover:bg-primary/5 text-base group"
           >
             Join Our Community
-            <ArrowRight className="ml-2 w-4 h-4" />
+            <ArrowRight className="ml-2 size-4 -rotate-45 group-hover:rotate-0 group-active:rotate-0 transition-transform duration-300" />
           </Button>
         </div>
       </div>
