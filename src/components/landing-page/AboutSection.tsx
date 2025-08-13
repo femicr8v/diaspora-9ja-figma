@@ -1,8 +1,9 @@
 "use client";
 
-import { Target, Eye, Heart, CheckCircle, Users } from "lucide-react";
+import { CheckCircle, Users } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { Card, CardContent } from "../ui/card";
+import { aboutCards, logoText } from "../../lib/constants";
 
 export function AboutSection() {
   return (
@@ -20,104 +21,72 @@ export function AboutSection() {
           </h2>
           <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             Born from a vision to unite the Nigerian diaspora, we've built more
-            than a platform—we've created a digital homeland.
+            than a platform, we've created a digital homeland. Our journey is
+            not just about connecting people, it's about fostering a vibrant,
+            inclusive space where every voice matters.
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8 md:gap-12 mb-16 md:mb-20">
-          <Card className="border-border/40 hover:border-primary/30 transition-all duration-500 group hover:shadow-2xl bg-gradient-to-br from-background to-primary/5">
-            <CardContent className="p-8 md:p-10 text-center">
-              <div className="w-16 md:w-20 h-16 md:h-20 bg-gradient-to-br from-primary to-primary/70 rounded-full flex items-center justify-center mx-auto mb-6 md:mb-8 group-hover:scale-110 transition-transform duration-300">
-                <Target className="w-8 md:w-10 h-8 md:h-10 text-white" />
-              </div>
-              <h3 className="text-xl md:text-2xl mb-4 md:mb-6 text-foreground font-headers font-bold">
-                Our Mission
-              </h3>
-              <p className="text-base md:text-lg text-muted-foreground leading-relaxed mb-4 md:mb-6">
-                To unite Nigerians worldwide through a vibrant, inclusive
-                digital hub that fosters networking, learning, and collaboration
-                across borders and industries.
-              </p>
-              <ul className="text-left space-y-2 text-sm md:text-base text-muted-foreground">
-                <li className="flex items-center">
-                  <CheckCircle className="w-4 h-4 text-primary mr-2" /> Global
-                  networking
-                </li>
-                <li className="flex items-center">
-                  <CheckCircle className="w-4 h-4 text-primary mr-2" />{" "}
-                  Knowledge sharing
-                </li>
-                <li className="flex items-center">
-                  <CheckCircle className="w-4 h-4 text-primary mr-2" /> Cultural
-                  preservation
-                </li>
-              </ul>
-            </CardContent>
-          </Card>
+        <div className="grid lg:grid-cols-3 gap-8 md:gap-12 mb-0 md:mb-20">
+          {aboutCards.map((card) => {
+            const Icon = card.icon;
+            const isAccent = card.color === "text-accent";
 
-          <Card className="border-border/40 hover:border-accent/30 transition-all duration-500 group hover:shadow-2xl bg-gradient-to-br from-background to-accent/5">
-            <CardContent className="p-8 md:p-10 text-center">
-              <div className="w-16 md:w-20 h-16 md:h-20 bg-gradient-to-br from-accent to-accent/70 rounded-full flex items-center justify-center mx-auto mb-6 md:mb-8 group-hover:scale-110 transition-transform duration-300">
-                <Eye className="w-8 md:w-10 h-8 md:h-10 text-white" />
-              </div>
-              <h3 className="text-xl md:text-2xl mb-4 md:mb-6 text-foreground font-headers font-bold">
-                Our Vision
-              </h3>
-              <p className="text-base md:text-lg text-muted-foreground leading-relaxed mb-4 md:mb-6">
-                A thriving global community where every Nigerian, regardless of
-                location, feels connected, supported, and empowered to achieve
-                extraordinary success.
-              </p>
-              <ul className="text-left space-y-2 text-sm md:text-base text-muted-foreground">
-                <li className="flex items-center">
-                  <CheckCircle className="w-4 h-4 text-accent mr-2" />{" "}
-                  Borderless connections
-                </li>
-                <li className="flex items-center">
-                  <CheckCircle className="w-4 h-4 text-accent mr-2" /> Mutual
-                  support
-                </li>
-                <li className="flex items-center">
-                  <CheckCircle className="w-4 h-4 text-accent mr-2" />{" "}
-                  Collective success
-                </li>
-              </ul>
-            </CardContent>
-          </Card>
+            // Create proper class strings for Tailwind CSS
+            const borderHoverClass = isAccent
+              ? "hover:border-accent/30 active:border-accent/30"
+              : "hover:border-primary/30 active:border-primary/30";
 
-          <Card className="border-border/40 hover:border-primary/30 transition-all duration-500 group hover:shadow-2xl bg-gradient-to-br from-background to-primary/5">
-            <CardContent className="p-8 md:p-10 text-center">
-              <div className="w-16 md:w-20 h-16 md:h-20 bg-gradient-to-br from-primary to-primary/70 rounded-full flex items-center justify-center mx-auto mb-6 md:mb-8 group-hover:scale-110 transition-transform duration-300">
-                <Heart className="w-8 md:w-10 h-8 md:h-10 text-white" />
-              </div>
-              <h3 className="text-xl md:text-2xl mb-4 md:mb-6 text-foreground font-headers font-bold">
-                Our Impact
-              </h3>
-              <p className="text-base md:text-lg text-muted-foreground leading-relaxed mb-4 md:mb-6">
-                Since 2023, we've facilitated thousands of connections, enabled
-                millions in investments, and created opportunities that span
-                continents.
-              </p>
-              <ul className="text-left space-y-2 text-sm md:text-base text-muted-foreground">
-                <li className="flex items-center">
-                  <CheckCircle className="w-4 h-4 text-primary mr-2" /> $50M+ in
-                  deals
-                </li>
-                <li className="flex items-center">
-                  <CheckCircle className="w-4 h-4 text-primary mr-2" /> 5,000+
-                  businesses
-                </li>
-                <li className="flex items-center">
-                  <CheckCircle className="w-4 h-4 text-primary mr-2" /> 50+
-                  countries
-                </li>
-              </ul>
-            </CardContent>
-          </Card>
+            const backgroundClass = isAccent
+              ? "bg-gradient-to-br from-background to-accent/5"
+              : "bg-gradient-to-br from-background to-primary/5";
+
+            return (
+              <Card
+                key={card.id}
+                className={`border-border/40 ${borderHoverClass} ${backgroundClass} transition-all duration-300 group hover:shadow-2xl active:shadow-2xl`}
+              >
+                <CardContent className="p-8 md:p-10 text-center">
+                  <div
+                    className={`size-16 md:size-20 bg-gradient-to-br ${
+                      isAccent
+                        ? "from-accent/10 to-accent/10"
+                        : "from-primary/10 to-primary/10"
+                    } rounded-full flex items-center justify-center mx-auto mb-6 md:mb-8 group-hover:scale-110 group-active:scale-110 transition-transform duration-300`}
+                  >
+                    <Icon
+                      className={`size-8 md:size-10 ${
+                        isAccent ? "text-accent" : "text-primary"
+                      }`}
+                    />
+                  </div>
+
+                  <h3 className="text-xl md:text-2xl mb-4 md:mb-6 text-foreground font-headers font-bold">
+                    {card.title}
+                  </h3>
+                  <p className="text-base md:text-lg text-muted-foreground leading-relaxed mb-4 md:mb-6">
+                    {card.description}
+                  </p>
+                  <ul className="text-left flex flex-col items-center justify-center space-y-2 text-sm md:text-base text-muted-foreground">
+                    {card.features.map((feature, index) => (
+                      <li key={index} className="flex items-center">
+                        <CheckCircle
+                          className={`size-4 ${
+                            isAccent ? "text-accent" : "text-primary"
+                          } mr-2`}
+                        />
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
 
         {/* Founder Story - Hidden on mobile */}
-        <div className="hidden md:block bg-gradient-to-r from-secondary/30 to-accent/10 rounded-3xl p-8 md:p-12 text-center">
+        <div className="hidden md:block bg-gradient-to-br from-primary/5 to-accent/10 rounded-3xl p-8 md:p-12 text-center border border-border/30">
           <h3 className="text-2xl md:text-3xl mb-4 md:mb-6 text-foreground font-headers font-bold">
             From Vision to Reality
           </h3>
@@ -136,7 +105,7 @@ export function AboutSection() {
               <p className="text-base font-semibold text-foreground">
                 Founding Team
               </p>
-              <p className="text-sm text-muted-foreground">Diaspora 9ja</p>
+              <p className="text-sm text-muted-foreground">{logoText}</p>
             </div>
           </div>
         </div>

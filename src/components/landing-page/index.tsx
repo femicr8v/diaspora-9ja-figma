@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { FAQSection } from "./FAQSection";
 import { PromoBanner } from "./PromoBanner";
 import { HeroSection } from "./HeroSection";
 import { AboutSection } from "./AboutSection";
-import { PlatformSection } from "./PlatformSection";
+import { HomepageHeader } from "./HomepageHeader";
 import { ContactSection } from "./ContactSection";
+import { PlatformSection } from "./PlatformSection";
 import { TestimonialsSection } from "./TestimonialsSection";
 import { CallToActionSection } from "./CallToActionSection";
 import { CommunityStatsSection } from "./CommunityStatsSection";
@@ -24,7 +24,7 @@ export function LandingPage() {
   return (
     <div className="min-h-screen">
       <PromoBanner showPromo={showPromo} onClose={() => setShowPromo(false)} />
-      <Header onGetStarted={handleGetStarted} />
+      <HomepageHeader onGetStarted={handleGetStarted} />
       <HeroSection onGetStarted={handleGetStarted} />
       <AboutSection />
       <CommunityStatsSection onGetStarted={handleGetStarted} />

@@ -45,3 +45,17 @@ export interface ContactMethod {
   description: string;
   action: string;
 }
+
+export interface NavigationLink {
+  href: string;
+  label: string;
+}
+
+export interface AboutCard {
+  id: string;
+  title: string;
+  description: string;
+  icon: LucideIcon;
+  color: string;
+  features: string[];
+}

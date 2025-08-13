@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "../ui/card";
-import { communityStats, communityProfiles } from "@/lib/constants";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
+import { communityStats, communityProfiles } from "@/lib/constants";
+import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 
 interface CommunityStatsSectionProps {
   onGetStarted: () => void;
@@ -43,31 +43,34 @@ export function CommunityStatsSection({
           <h2 className="text-3xl md:text-4xl lg:text-5xl mb-4 md:mb-6 text-foreground font-headers font-bold">
             Our Thriving Community
           </h2>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
             Real numbers from real people making real connections across the
-            globe
+            globe and beyond. Every story shared, every milestone celebrated,
+            and every friendship forged adds to our collective strength.
           </p>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-12 md:mb-16">
+        {/* <div className="grid grid-cols-4 gap-6 md:gap-8 mb-12 md:mb-16"> */}
+        <div className="grid grid-cols-4 gap-2 md:gap-8 mb-12 md:mb-16">
           {communityStats.map((stat, index) => {
             const Icon = stat.icon;
+
             return (
               <Card
                 key={index}
-                className="border-border/40 bg-background/80 text-center hover:shadow-xl transition-all duration-300 group"
+                className="border-border/40 bg-background/80 text-center hover:border-primary/20 hover:shadow-xl active:shadow-xl transition-all duration-300 group text-primary"
               >
-                <CardContent className="p-6 md:p-8">
-                  <div className="w-12 md:w-16 h-12 md:h-16 bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-4 md:mb-6 group-hover:bg-primary/20 transition-colors">
-                    <Icon className="w-6 md:w-8 h-6 md:h-8 text-primary" />
+                <CardContent className="p-2 md:p-8 max-md:[&:last-child]:pb-2">
+                  <div className="size-12 md:size-16 bg-primary/5 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-6 group-hover:bg-primary/10 group-hover:scale-110 group-active:scale-110 transition-all duration-300">
+                    <Icon className="size-6 md:size-8" />
                   </div>
-                  <div className="text-2xl md:text-4xl font-bold text-primary mb-2 font-headers">
+                  <div className="text-lg md:text-4xl font-bold mb-1 font-headers">
                     {stat.value}
                   </div>
-                  <p className="text-sm md:text-base text-muted-foreground mb-2">
+                  <p className="text-xs md:text-base text-muted-foreground mb-2">
                     {stat.label}
                   </p>
-                  <div className="text-xs md:text-sm text-green-600 font-medium">
+                  <div className="text-xs md:text-base text-center text-green-600 font-medium">
                     ↗ {stat.trend}
                   </div>
                 </CardContent>

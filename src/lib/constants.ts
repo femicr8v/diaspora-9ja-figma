@@ -12,6 +12,8 @@ import {
   Globe,
   Award,
   MessageSquare,
+  Target,
+  Eye,
 } from "lucide-react";
 
 import type {
@@ -21,9 +23,12 @@ import type {
   ContactMethod,
   PlatformFeature,
   CommunityProfile,
+  NavigationLink,
+  AboutCard,
 } from "./type";
 
 export const logoImage: string = "/logo.png";
+export const logoText: string = "Diaspo9ja";
 export const promoImage: string = "/api/placeholder/600/400";
 export const communityGridImage: string = "/api/placeholder/800/600";
 
@@ -79,10 +84,30 @@ export const platformFeatures: PlatformFeature[] = [
 ];
 
 export const communityStats: CommunityStat[] = [
-  { label: "Articles this week", value: "28", icon: BookOpen, trend: "+12%" },
-  { label: "Total readers", value: "15.2k", icon: Users, trend: "+24%" },
-  { label: "Premium subscribers", value: "2.1k", icon: Star, trend: "+18%" },
-  { label: "Contributors", value: "47", icon: MessageCircle, trend: "+8%" },
+  {
+    label: "Articles this week",
+    value: "28",
+    icon: BookOpen,
+    trend: "+12%",
+  },
+  {
+    label: "Total readers",
+    value: "15.2k",
+    icon: Users,
+    trend: "+24%",
+  },
+  {
+    label: "Premium subscribers",
+    value: "2.1k",
+    icon: Star,
+    trend: "+18%",
+  },
+  {
+    label: "Total Contributors",
+    value: "47",
+    icon: MessageCircle,
+    trend: "+8%",
+  },
 ];
 
 export const aboutStats: AboutStat[] = [
@@ -192,5 +217,52 @@ export const contactMethods: ContactMethod[] = [
     value: "Available 24/7",
     description: "Instant support for members",
     action: "#",
+  },
+];
+
+export const navigationLinks: NavigationLink[] = [
+  { href: "#about", label: "About" },
+  { href: "#platform", label: "Platform" },
+  { href: "#community", label: "Community" },
+  { href: "#testimonials", label: "Testimonials" },
+  { href: "#faqs", label: "FAQs" },
+  { href: "#contact", label: "Contact" },
+];
+
+export const aboutCards: AboutCard[] = [
+  {
+    id: "mission",
+    title: "Our Mission",
+    description:
+      "To unite Nigerians worldwide through a vibrant, inclusive digital hub that fosters networking, learning, and collaboration across borders and industries.",
+    icon: Target,
+    color: "text-primary",
+    features: [
+      "Global networking",
+      "Knowledge sharing",
+      "Cultural preservation",
+    ],
+  },
+  {
+    id: "vision",
+    title: "Our Vision",
+    description:
+      "A thriving global community where every Nigerian, regardless of location, feels connected, supported, and empowered to achieve extraordinary success.",
+    icon: Eye,
+    color: "text-accent",
+    features: [
+      "Mutual support",
+      "Collective success",
+      "Borderless connections",
+    ],
+  },
+  {
+    id: "impact",
+    title: "Our Impact",
+    description:
+      "Since 2023, we've facilitated thousands of connections, enabled millions in investments, and created opportunities that span continents.",
+    icon: Heart,
+    color: "text-primary",
+    features: ["50+ countries", "$50M+ in deals", "5,000+ businesses"],
   },
 ];

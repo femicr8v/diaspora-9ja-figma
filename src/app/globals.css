@@ -288,13 +288,23 @@
   animation: fadeInUp 0.6s ease-out;
 }
 
-@keyframes pulse-glow {
+/* @keyframes pulse-glow {
   0%,
   100% {
     box-shadow: 0 0 20px rgba(26, 95, 63, 0.3);
   }
   50% {
     box-shadow: 0 0 30px rgba(26, 95, 63, 0.5);
+  }
+} */
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 8px rgba(26, 95, 63, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 12px rgba(26, 95, 63, 0.2);
   }
 }
 
