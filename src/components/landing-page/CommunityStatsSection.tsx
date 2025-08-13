@@ -2,7 +2,7 @@
 
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent } from "../ui/card";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { communityStats, communityProfiles } from "@/lib/constants";
@@ -16,23 +16,98 @@ export function CommunityStatsSection({
   onGetStarted,
 }: CommunityStatsSectionProps) {
   const [membersSlide, setMembersSlide] = useState(0);
+  const [itemsPerView, setItemsPerView] = useState(3);
+  const [isAutoScrollPaused, setIsAutoScrollPaused] = useState(false);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+  // Calculate items per view based on screen size
+  const updateItemsPerView = useCallback(() => {
+    if (typeof window !== "undefined") {
+      if (window.innerWidth < 768) {
+        setItemsPerView(1);
+      } else if (window.innerWidth < 1024) {
+        setItemsPerView(2);
+      } else {
+        setItemsPerView(3);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    updateItemsPerView();
+    window.addEventListener("resize", updateItemsPerView);
+    return () => window.removeEventListener("resize", updateItemsPerView);
+  }, [updateItemsPerView]);
+
+  // Calculate max slides
+  const maxSlides = Math.max(0, communityProfiles.length - itemsPerView);
 
   // Auto-scroll carousel for members
   useEffect(() => {
+    if (isAutoScrollPaused || maxSlides === 0) return;
+
     const timer = setInterval(() => {
-      setMembersSlide((prev) => (prev + 1) % communityProfiles.length);
+      setMembersSlide((prev) => {
+        const nextSlide = prev + 1;
+        return nextSlide > maxSlides ? 0 : nextSlide;
+      });
     }, 4000);
     return () => clearInterval(timer);
-  }, []);
+  }, [maxSlides, isAutoScrollPaused]);
 
   const handleMembersSlideChange = (direction: "prev" | "next") => {
+    setIsAutoScrollPaused(true);
+
     if (direction === "next") {
-      setMembersSlide((prev) => (prev + 1) % communityProfiles.length);
+      setMembersSlide((prev) => Math.min(prev + 1, maxSlides));
     } else {
-      setMembersSlide(
-        (prev) =>
-          (prev - 1 + communityProfiles.length) % communityProfiles.length
-      );
+      setMembersSlide((prev) => Math.max(prev - 1, 0));
+    }
+
+    // Resume auto-scroll after 5 seconds
+    setTimeout(() => setIsAutoScrollPaused(false), 5000);
+  };
+
+  const handleDotClick = (index: number) => {
+    setIsAutoScrollPaused(true);
+    setMembersSlide(Math.min(index, maxSlides));
+
+    // Resume auto-scroll after 5 seconds
+    setTimeout(() => setIsAutoScrollPaused(false), 5000);
+  };
+
+  // Handle keyboard navigation
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === "ArrowLeft" && membersSlide > 0) {
+      handleMembersSlideChange("prev");
+    } else if (event.key === "ArrowRight" && membersSlide < maxSlides) {
+      handleMembersSlideChange("next");
+    }
+  };
+
+  // Handle touch events for swipe navigation
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    if (isLeftSwipe && membersSlide < maxSlides) {
+      handleMembersSlideChange("next");
+    }
+    if (isRightSwipe && membersSlide > 0) {
+      handleMembersSlideChange("prev");
     }
   };
 
@@ -89,19 +164,27 @@ export function CommunityStatsSection({
           </p>
         </div>
 
-        <div className="relative">
+        <div
+          className="relative"
+          onKeyDown={handleKeyDown}
+          onMouseEnter={() => setIsAutoScrollPaused(true)}
+          onMouseLeave={() => setIsAutoScrollPaused(false)}
+          tabIndex={0}
+          role="region"
+          aria-label="Community members carousel"
+        >
           {/* Carousel Container */}
-          <div className="overflow-hidden">
+          <div
+            className="overflow-hidden"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
             <div
               className="flex transition-transform duration-500 ease-out"
               style={{
                 transform: `translateX(-${
-                  membersSlide *
-                  (window.innerWidth < 768
-                    ? 100
-                    : window.innerWidth < 1024
-                    ? 50
-                    : 33.333)
+                  membersSlide * (100 / itemsPerView)
                 }%)`,
               }}
             >
@@ -146,7 +229,8 @@ export function CommunityStatsSection({
             variant="outline"
             size="sm"
             onClick={() => handleMembersSlideChange("prev")}
-            className="absolute left-2 top-1/2 transform -translate-y-1/2 rounded-full w-8 h-8 md:w-10 md:h-10 p-0 bg-white/90 hover:bg-white shadow-lg border-white/50"
+            disabled={membersSlide === 0}
+            className="absolute left-2 top-1/2 transform -translate-y-1/2 rounded-full w-8 h-8 md:w-10 md:h-10 p-0 bg-white/90 hover:bg-white shadow-lg border-white/50 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <ChevronLeft className="w-4 h-4" />
           </Button>
@@ -154,25 +238,29 @@ export function CommunityStatsSection({
             variant="outline"
             size="sm"
             onClick={() => handleMembersSlideChange("next")}
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 rounded-full w-8 h-8 md:w-10 md:h-10 p-0 bg-white/90 hover:bg-white shadow-lg border-white/50"
+            disabled={membersSlide >= maxSlides}
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 rounded-full w-8 h-8 md:w-10 md:h-10 p-0 bg-white/90 hover:bg-white shadow-lg border-white/50 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <ChevronRight className="w-4 h-4" />
           </Button>
 
           {/* Dots Indicator */}
-          <div className="flex justify-center mt-6 md:mt-8 space-x-2">
-            {communityProfiles.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setMembersSlide(index)}
-                className={`w-2 h-2 md:w-3 md:h-3 rounded-full transition-all duration-300 ${
-                  index === membersSlide
-                    ? "bg-primary scale-125 shadow-lg"
-                    : "bg-muted hover:bg-muted-foreground/50"
-                }`}
-              />
-            ))}
-          </div>
+          {maxSlides > 0 && (
+            <div className="flex justify-center mt-6 md:mt-8 space-x-2">
+              {Array.from({ length: maxSlides + 1 }, (_, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleDotClick(index)}
+                  className={`w-2 h-2 md:w-3 md:h-3 rounded-full transition-all duration-300 ${
+                    index === membersSlide
+                      ? "bg-primary scale-125 shadow-lg"
+                      : "bg-muted hover:bg-muted-foreground/50"
+                  }`}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="text-center mt-8 md:mt-12">
