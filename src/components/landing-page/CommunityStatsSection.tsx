@@ -1,12 +1,14 @@
 "use client";
 
 import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import { ArrowRight } from "lucide-react";
 import { Card, CardContent } from "../ui/card";
 import { useState, useEffect, useCallback } from "react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { communityStats, communityProfiles } from "@/lib/constants";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 interface CommunityStatsSectionProps {
   onGetStarted: () => void;
@@ -264,14 +266,16 @@ export function CommunityStatsSection({
             </span>{" "}
             building the future together
           </p>
-          <Button
-            onClick={onGetStarted}
-            variant="outline"
-            className="border-primary/20 text-primary hover:text-primary hover:bg-primary/5 text-base group"
+          <Link
+            href="/join-the-community"
+            className={cn(
+              buttonVariants({ variant: "outline", size: "default" }),
+              "border-primary/20 text-primary hover:text-primary hover:bg-primary/5 text-base group"
+            )}
           >
             Join Our Community
             <ArrowRight className="ml-2 size-4 -rotate-45 group-hover:rotate-0 group-active:rotate-0 transition-transform duration-300" />
-          </Button>
+          </Link>
         </div>
       </div>
     </section>

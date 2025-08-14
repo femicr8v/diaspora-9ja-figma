@@ -1,60 +1,40 @@
 "use client";
 
-import { ArrowRight, CheckCircle } from "lucide-react";
 import { Badge } from "../ui/badge";
-import { Button, buttonVariants } from "../ui/button";
-import { aboutStats } from "@/lib/constants";
-import { cn } from "@/lib/utils";
-import Link from "next/link";
+import { trustIndicators } from "@/lib/constants";
 
-interface HeroSectionProps {
-  onGetStarted: () => void;
-}
-
-export function HeroSection({ onGetStarted }: HeroSectionProps) {
+export function JoinNowHeroSection() {
   const repeatingPlusGreenPattern =
     "bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23e8f5e8%22%20fill-opacity%3D%220.3%22%3E%3Cpath%20d%3D%22m36%2034v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6%2034v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6%204V0H4v4H0v2h4v4h2V6h4V4H6z%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]";
 
   return (
-    <section className="py-16 md:py-24 px-6 text-center bg-gradient-to-br from-background via-secondary/20 to-accent/5 relative overflow-hidden">
+    <section className="py-16 md:py-24 px-6 text-center bg-gradient-to-r from-primary/5 via-background to-accent/5 relative overflow-hidden">
       <div
         className={`absolute inset-0 ${repeatingPlusGreenPattern} opacity-50`}
       />
 
-      <div className="container mx-auto max-w-7xl relative z-10">
+      <div className="container mx-auto max-w-7xl text-center relative z-10">
         <Badge
           variant="secondary"
           className="mb-6 md:mb-8 bg-accent/10 text-accent border-accent/20 text-sm font-semibold px-4 py-2"
         >
-          🌍 Connecting 15,000+ Nigerians Worldwide
+          🌍 Join 15,000+ Nigerians Worldwide
         </Badge>
 
         <h1 className="max-w-4xl text-3xl md:text-5xl lg:text-6xl xl:text-7xl mx-auto mb-6 md:mb-8 font-bold gradient-text font-headers leading-tight">
-          Your Global Nigerian Community Hub
+          Join The Global Nigerian Community
         </h1>
+
         <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground mb-8 md:mb-12 max-w-4xl mx-auto leading-relaxed">
-          Join the most trusted platform connecting Nigerians worldwide. Access
+          Connect with the most trusted platform for Nigerians worldwide. Access
           exclusive opportunities, build meaningful relationships, and stay
           connected with your heritage while thriving globally.
         </p>
 
-        <div className="flex flex-col items-center gap-4 mb-8 md:mb-12">
-          <Link
-            href="/join-the-community"
-            className={cn(
-              buttonVariants({ variant: "default", size: "lg" }),
-              "bg-primary hover:bg-primary/90 active:bg-primary/90 text-primary-foreground px-8 md:px-10 py-3 md:py-5 text-base md:text-lg font-semibold shadow-xl hover:shadow-2xl active:shadow-2xl transform hover:scale-105 active:scale-105 transition-all duration-300 group"
-            )}
-          >
-            Start Your Journey
-            <ArrowRight className="ml-2 md:ml-3 size-5 md:size-6 -rotate-45 group-hover:rotate-0 group-active:rotate-0 transition-transform duration-300" />
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-4 gap-6 md:gap-8 max-w-4xl mx-auto">
-          {aboutStats.map((stat, index) => {
-            const Icon = stat.icon;
-
+        {/* Trust Indicators */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+          {trustIndicators.map((indicator, index) => {
+            const Icon = indicator.icon;
             return (
               <div
                 key={index}
@@ -70,10 +50,10 @@ export function HeroSection({ onGetStarted }: HeroSectionProps) {
                   <Icon className="size-6 md:size-8" />
                 </div>
                 <div className="text-lg md:text-3xl font-bold mb-1 font-headers">
-                  {stat.number}
+                  {indicator.number}
                 </div>
                 <p className="text-xs md:text-sm text-muted-foreground font-medium">
-                  {stat.label}
+                  {indicator.label}
                 </p>
               </div>
             );

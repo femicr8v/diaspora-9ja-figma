@@ -59,3 +59,56 @@ export interface AboutCard {
   color: string;
   features: string[];
 }
+
+export interface JoinNowPageBenefits {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  highlight: string;
+}
+
+export interface TrustIndicator {
+  number: string;
+  label: string;
+  icon: LucideIcon;
+}
+
+export interface Country {
+  code: string;
+  country: string;
+  flag: string;
+  name: string;
+}
+
+export interface FormField {
+  id: string;
+  label: string;
+  placeholder: string;
+  type: string;
+  required: boolean;
+}
+
+export interface SecurityFeature {
+  icon: LucideIcon;
+  text: string;
+  color: string;
+}
+
+export interface FormConfig {
+  title: string;
+  subtitle: string;
+  submitButtonText: string;
+  processingText: string;
+  legalText: {
+    prefix: string;
+    termsLink: {
+      text: string;
+      href: string;
+    };
+    and: string;
+    privacyLink: {
+      text: string;
+      href: string;
+    };
+  };
+}

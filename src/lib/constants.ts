@@ -14,6 +14,7 @@ import {
   MessageSquare,
   Target,
   Eye,
+  Calendar,
 } from "lucide-react";
 
 import type {
@@ -25,6 +26,9 @@ import type {
   CommunityProfile,
   NavigationLink,
   AboutCard,
+  JoinNowPageBenefits,
+  TrustIndicator,
+  Country,
 } from "./type";
 
 export const logoImage: string = "/logo.png";
@@ -264,5 +268,85 @@ export const aboutCards: AboutCard[] = [
     icon: Heart,
     color: "text-primary",
     features: ["50+ countries", "$50M+ in deals", "5,000+ businesses"],
+  },
+];
+
+export const joinNowPageBenefits: JoinNowPageBenefits[] = [
+  {
+    icon: Users,
+    title: "Access to Trusted Information",
+    description:
+      "Get verified news, insights, and updates specifically curated for the Nigerian diaspora community",
+    highlight: "Exclusive Content",
+  },
+  {
+    icon: Globe,
+    title: "Networking Opportunities",
+    description:
+      "Connect with fellow Nigerians worldwide, build meaningful professional and personal relationships",
+    highlight: "15,000+ Members",
+  },
+  {
+    icon: TrendingUp,
+    title: "Investment Opportunities",
+    description:
+      "Access vetted investment deals and business opportunities with full due diligence reports",
+    highlight: "$50M+ Deals",
+  },
+  {
+    icon: Calendar,
+    title: "Exclusive Events & Resources",
+    description:
+      "Join private events, masterclasses, and access premium content not available to the public",
+    highlight: "Premium Access",
+  },
+];
+
+export const trustIndicators: TrustIndicator[] = [
+  { number: "50+", label: "Countries", icon: Globe },
+  { number: "15,000+", label: "Active Members", icon: Users },
+  { number: "98%", label: "Satisfaction Rate", icon: Star },
+  { number: "$50M+", label: "Investment Value", icon: TrendingUp },
+];
+
+export const countries: Country[] = [
+  { code: "+1", country: "US", flag: "🇺🇸", name: "United States" },
+  { code: "+1", country: "CA", flag: "🇨🇦", name: "Canada" },
+  { code: "+44", country: "GB", flag: "🇬🇧", name: "United Kingdom" },
+  { code: "+234", country: "NG", flag: "🇳🇬", name: "Nigeria" },
+  { code: "+971", country: "AE", flag: "🇦🇪", name: "United Arab Emirates" },
+  { code: "+49", country: "DE", flag: "🇩🇪", name: "Germany" },
+  { code: "+33", country: "FR", flag: "🇫🇷", name: "France" },
+  { code: "+31", country: "NL", flag: "🇳🇱", name: "Netherlands" },
+  { code: "+41", country: "CH", flag: "🇨🇭", name: "Switzerland" },
+  { code: "+61", country: "AU", flag: "🇦🇺", name: "Australia" },
+  { code: "+27", country: "ZA", flag: "🇿🇦", name: "South Africa" },
+  { code: "+65", country: "SG", flag: "🇸🇬", name: "Singapore" },
+];
+
+export const joinNowFormControls = [
+  {
+    id: "fullName",
+    label: "Full Name *",
+    type: "text",
+    placeholder: "Your full name",
+  },
+  {
+    id: "email",
+    label: "Email Address *",
+    type: "email",
+    placeholder: "your@email.com",
+  },
+  {
+    id: "location",
+    label: "Location *",
+    type: "text",
+    placeholder: "Select your country",
+  },
+  {
+    id: "phone",
+    label: "Phone Number *",
+    type: "tel",
+    placeholder: "20 1234 5678",
   },
 ];

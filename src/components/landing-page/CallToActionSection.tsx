@@ -2,7 +2,9 @@
 
 import { ArrowRight, CheckCircle } from "lucide-react";
 import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 interface CallToActionSectionProps {
   onGetStarted: () => void;
@@ -45,14 +47,16 @@ export function CallToActionSection({
         </p>
 
         <div className="mb-8 md:mb-12">
-          <Button
-            size="lg"
-            onClick={onGetStarted}
-            className="bg-white text-primary hover:bg-white/90 px-8 md:px-12 py-4 md:py-6 text-lg md:text-xl font-semibold shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-300"
+          <Link
+            href="/join-the-community"
+            className={cn(
+              buttonVariants({ variant: "default", size: "lg" }),
+              `bg-white text-primary hover:bg-white/90 px-8 md:px-12 py-4 md:py-6 text-lg md:text-xl font-semibold shadow-2xl hover:shadow-3xl transform hover:scale-105 group transition-all duration-300`
+            )}
           >
             Join the Community
-            <ArrowRight className="ml-2 md:ml-3 w-5 md:w-6 h-5 md:h-6" />
-          </Button>
+            <ArrowRight className="ml-2 md:ml-3 size-5 md:size-6 -rotate-45 group-hover:rotate-0 group-active:rotate-0 transition-transform duration-300" />
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 text-white/90">

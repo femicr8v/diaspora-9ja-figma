@@ -1,8 +1,10 @@
 "use client";
 
 import { Globe, Briefcase, Heart, ArrowRight } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 interface CommunityShowcaseSectionProps {
   onGetStarted: () => void;
@@ -75,14 +77,16 @@ export function CommunityShowcaseSection({
               and life-changing opportunities created within our community. Your
               story could be next.
             </p>
-            <Button
-              onClick={onGetStarted}
-              size="lg"
-              className="bg-accent hover:bg-accent/90 text-accent-foreground text-base font-semibold px-6 md:px-8 py-3 md:py-4 shadow-xl"
+            <Link
+              href="/join-the-community"
+              className={cn(
+                buttonVariants({ variant: "default", size: "lg" }),
+                "bg-accent hover:bg-accent/90 active:bg-accent/90 text-accent-foreground text-base font-semibold px-6 md:px-8 py-3 md:py-4 shadow-xl group"
+              )}
             >
               Start Your Success Story
-              <ArrowRight className="ml-2 w-4 md:w-5 h-4 md:h-5" />
-            </Button>
+              <ArrowRight className="ml-2 size-4 -rotate-45 group-hover:rotate-0 group-active:rotate-0 transition-transform duration-300" />
+            </Link>
           </CardContent>
         </Card>
       </div>
