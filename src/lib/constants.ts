@@ -28,7 +28,9 @@ import type {
   AboutCard,
   JoinNowPageBenefits,
   TrustIndicator,
+  JoinNowFormControls,
 } from "./type";
+import { countries } from "./countries";
 
 export const logoImage: string = "/logo.png";
 export const logoText: string = "Diaspo9ja";
@@ -298,6 +300,52 @@ export const joinNowPageBenefits: JoinNowPageBenefits[] = [
     description:
       "Join private events, masterclasses, and access premium content not available to the public",
     highlight: "Premium Access",
+  },
+];
+
+export const joinNowFormControls: JoinNowFormControls[] = [
+  {
+    name: "fullName",
+    label: "Full Name *",
+    placeholder: "Your full name",
+    type: "text",
+    required: true,
+    validation: {
+      required: "Full name is required",
+      minLength: {
+        value: 2,
+        message: "Full name must be at least 2 characters",
+      },
+    },
+  },
+  {
+    name: "email",
+    label: "Email Address *",
+    placeholder: "your@email.com",
+    type: "email",
+    required: true,
+    validation: {
+      required: "Email is required",
+      pattern: {
+        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        message: "Please enter a valid email address",
+      },
+    },
+  },
+  {
+    name: "location",
+    label: "Location *",
+    placeholder: "Select your country",
+    type: "select",
+    required: true,
+    validation: {
+      required: "Location is required",
+    },
+    options: countries.map((country) => ({
+      value: country.country,
+      label: country.country,
+      flag: country.flag,
+    })),
   },
 ];
 

@@ -9,7 +9,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
   const sig = req.headers.get("Stripe-Signature");
 
   const dateTime = new Date(response?.created * 1000).toLocaleDateString();
-  const timeString = new Date(response?.created * 1000).toLocaleDateString();
+  const timeString = new Date(response?.created * 1000).toLocaleTimeString();
 
   try {
     let event = stripe.webhooks.constructEvent(
@@ -18,9 +18,10 @@ export async function POST(req: NextRequest, res: NextResponse) {
       process.env.STRIPE_WEBHOOK_SECRET as string
     );
 
-    if (event.type === "charge.succeeded") {
-      const charge = event.data.object;
-      console.log("Charge succeeded:", charge);
-    }
-  } catch (error) {}
+    console.log("event", event.type);
+
+    return NextResponse.json({ status: "Success", event: event.type });
+  } catch (error) {
+    return NextResponse.json({ status: "Failed", error });
+  }
 }

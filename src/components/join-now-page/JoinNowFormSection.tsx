@@ -20,29 +20,15 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
+
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { countries } from "@/lib/countries";
-
-interface FormData {
-  fullName: string;
-  email: string;
-  location: string;
-  countryCode: string;
-  phone: string;
-}
-
-interface FormFieldConfig {
-  name: keyof FormData;
-  label: string;
-  placeholder: string;
-  type: "text" | "email" | "tel" | "select";
-  required: boolean;
-  validation?: any;
-  options?: Array<{ value: string; label: string; flag?: string }>;
-}
+import { JoinNowFormControls, JoinNowFormFormData } from "@/lib/type";
+import { joinNowFormControls } from "@/lib/constants";
 
 // Helper function to convert country code to flag emoji
 function getFlagEmoji(countryCode: string): string {
+  if (!countryCode || countryCode.length !== 2) return "🌍";
   const codePoints = countryCode
     .toUpperCase()
     .split("")
@@ -50,65 +36,8 @@ function getFlagEmoji(countryCode: string): string {
   return String.fromCodePoint(...codePoints);
 }
 
-// Country Select Component
-function CountrySelect({
-  value,
-  onValueChange,
-  error,
-}: {
-  value: string;
-  onValueChange: (value: string) => void;
-  error?: boolean;
-}) {
-  return (
-    <Select value={value} onValueChange={onValueChange}>
-      <SelectTrigger
-        className={`w-32 h-12 bg-muted/50 border transition-all duration-200 ${
-          error
-            ? "border-destructive focus:border-destructive bg-destructive/5"
-            : "border-border focus:border-primary focus:bg-background"
-        }`}
-      >
-        <SelectValue>
-          <div className="flex items-center space-x-2">
-            <span className="text-lg">
-              {countries.find((c) => `${c.code}-${c.flag}` === value)
-                ? getFlagEmoji(
-                    countries.find((c) => `${c.code}-${c.flag}` === value)!.flag
-                  )
-                : "🌍"}
-            </span>
-            <span className="text-sm font-medium">
-              {countries.find((c) => `${c.code}-${c.flag}` === value)?.code ||
-                value}
-            </span>
-          </div>
-        </SelectValue>
-      </SelectTrigger>
-      <SelectContent>
-        {countries.map((country, index) => (
-          <SelectItem
-            key={`${country.country}-${index}`}
-            value={`${country.code}-${country.flag}`}
-          >
-            <div className="flex items-center space-x-3 py-1">
-              <span className="text-lg">{getFlagEmoji(country.flag)}</span>
-              <div className="flex flex-col">
-                <span className="font-medium">{country.code}</span>
-                <span className="text-xs text-muted-foreground">
-                  {country.country}
-                </span>
-              </div>
-            </div>
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
-  );
-}
-
 export function JoinNowFormSection() {
-  const form = useForm<FormData>({
+  const form = useForm<JoinNowFormFormData>({
     defaultValues: {
       fullName: "",
       email: "",
@@ -126,54 +55,7 @@ export function JoinNowFormSection() {
     reset,
   } = form;
 
-  // Form fields configuration
-  const formFields: FormFieldConfig[] = [
-    {
-      name: "fullName",
-      label: "Full Name *",
-      placeholder: "Your full name",
-      type: "text",
-      required: true,
-      validation: {
-        required: "Full name is required",
-        minLength: {
-          value: 2,
-          message: "Full name must be at least 2 characters",
-        },
-      },
-    },
-    {
-      name: "email",
-      label: "Email Address *",
-      placeholder: "your@email.com",
-      type: "email",
-      required: true,
-      validation: {
-        required: "Email is required",
-        pattern: {
-          value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-          message: "Please enter a valid email address",
-        },
-      },
-    },
-    {
-      name: "location",
-      label: "Location *",
-      placeholder: "Select your country",
-      type: "select",
-      required: true,
-      validation: {
-        required: "Location is required",
-      },
-      options: countries.map((country) => ({
-        value: country.country,
-        label: country.country,
-        flag: country.flag,
-      })),
-    },
-  ];
-
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: JoinNowFormFormData) => {
     try {
       // Simulate form processing
       await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -226,7 +108,7 @@ export function JoinNowFormSection() {
           <Form {...form}>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               {/* Regular form fields */}
-              {formFields.map((fieldConfig) => (
+              {joinNowFormControls.map((fieldConfig) => (
                 <FormField
                   key={fieldConfig.name}
                   control={control}
@@ -253,28 +135,22 @@ export function JoinNowFormSection() {
                               <SelectValue
                                 placeholder={fieldConfig.placeholder}
                               >
-                                {fieldConfig.options?.find(
-                                  (option) => option.value === field.value
-                                ) && (
-                                  <div className="flex items-center space-x-2">
-                                    <span className="text-lg">
-                                      {
-                                        fieldConfig.options.find(
-                                          (option) =>
-                                            option.value === field.value
-                                        )?.flag
-                                      }
-                                    </span>
-                                    <span>
-                                      {
-                                        fieldConfig.options.find(
-                                          (option) =>
-                                            option.value === field.value
-                                        )?.label
-                                      }
-                                    </span>
-                                  </div>
-                                )}
+                                {(() => {
+                                  const selectedOption =
+                                    fieldConfig.options?.find(
+                                      (option) => option.value === field.value
+                                    );
+                                  return selectedOption ? (
+                                    <div className="flex items-center space-x-2">
+                                      <span className="text-lg">
+                                        {getFlagEmoji(
+                                          selectedOption.flag || "us"
+                                        )}
+                                      </span>
+                                      <span>{selectedOption.label}</span>
+                                    </div>
+                                  ) : null;
+                                })()}
                               </SelectValue>
                             </SelectTrigger>
                             <SelectContent>
@@ -359,20 +235,14 @@ export function JoinNowFormSection() {
                               <SelectTrigger className="w-auto h-full border-0 bg-transparent focus:ring-0 focus:ring-offset-0 rounded-r-none pr-2">
                                 <SelectValue>
                                   <div className="flex items-center space-x-2">
-                                    <span className="text-lg">
-                                      {countries.find(
-                                        (c) =>
-                                          `${c.code}-${c.flag}` ===
-                                          countryField.value
-                                      )
-                                        ? getFlagEmoji(
-                                            countries.find(
-                                              (c) =>
-                                                `${c.code}-${c.flag}` ===
-                                                countryField.value
-                                            )!.flag
-                                          )
-                                        : "🇺🇸"}
+                                    <span className="text-xl">
+                                      {getFlagEmoji(
+                                        countries.find(
+                                          (c) =>
+                                            `${c.code}-${c.flag}` ===
+                                            countryField.value
+                                        )?.flag || "us"
+                                      )}
                                     </span>
                                   </div>
                                 </SelectValue>

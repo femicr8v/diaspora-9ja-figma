@@ -79,14 +79,6 @@ export interface Country {
   flag: string;
 }
 
-export interface FormField {
-  id: string;
-  label: string;
-  placeholder: string;
-  type: string;
-  required: boolean;
-}
-
 export interface SecurityFeature {
   icon: LucideIcon;
   text: string;
@@ -110,4 +102,22 @@ export interface FormConfig {
       href: string;
     };
   };
+}
+
+export interface JoinNowFormFormData {
+  fullName: string;
+  email: string;
+  location: string;
+  countryCode: string;
+  phone: string;
+}
+
+export interface JoinNowFormControls {
+  name: keyof JoinNowFormFormData;
+  label: string;
+  placeholder: string;
+  type: "text" | "email" | "tel" | "select";
+  required: boolean;
+  validation?: any;
+  options?: Array<{ value: string; label: string; flag?: string }>;
 }
