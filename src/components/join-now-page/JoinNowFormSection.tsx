@@ -114,7 +114,7 @@ export function JoinNowFormSection() {
                             onValueChange={field.onChange}
                           >
                             <SelectTrigger
-                              className={`h-12 bg-muted/50 border transition-all duration-200 ${
+                              className={`h-12 min-h-12 bg-muted/50 border transition-all duration-200 w-full ${
                                 fieldState.error
                                   ? "border-destructive focus:border-destructive bg-destructive/5"
                                   : "border-border focus:border-primary focus:bg-background"
@@ -146,7 +146,7 @@ export function JoinNowFormSection() {
                             <SelectContent>
                               {fieldConfig.options?.map((option, index) => (
                                 <SelectItem
-                                  key={`${option.value}-${index}`}
+                                  key={`location-${option.value}-${index}`}
                                   value={option.value}
                                 >
                                   <div className="flex items-center space-x-3 py-1">
@@ -167,7 +167,7 @@ export function JoinNowFormSection() {
                           <Input
                             type={fieldConfig.type}
                             placeholder={fieldConfig.placeholder}
-                            className={`h-12 bg-muted/50 border transition-all duration-200 ${
+                            className={`h-12 bg-muted/50 border transition-all duration-200 w-full ${
                               fieldState.error
                                 ? "border-destructive focus:border-destructive bg-destructive/5"
                                 : "border-border focus:border-primary focus:bg-background"
@@ -252,7 +252,7 @@ export function JoinNowFormSection() {
                               <SelectContent>
                                 {countries.map((country, index) => (
                                   <SelectItem
-                                    key={`${country.country}-${index}`}
+                                    key={`phone-${country.country}-${country.code}-${index}`}
                                     value={country.code}
                                   >
                                     <div className="flex items-center space-x-3 py-1">
@@ -315,6 +315,7 @@ export function JoinNowFormSection() {
                   </>
                 )}
               </Button>
+
               <div className="pt-4 space-y-4">
                 <div className="text-center">
                   <p className="text-sm text-muted-foreground">
