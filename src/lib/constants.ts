@@ -309,21 +309,6 @@ export const trustIndicators: TrustIndicator[] = [
   { number: "$50M+", label: "Investment Value", icon: TrendingUp },
 ];
 
-export const countries: Country[] = [
-  { code: "+1", country: "US", flag: "🇺🇸", name: "United States" },
-  { code: "+1", country: "CA", flag: "🇨🇦", name: "Canada" },
-  { code: "+44", country: "GB", flag: "🇬🇧", name: "United Kingdom" },
-  { code: "+234", country: "NG", flag: "🇳🇬", name: "Nigeria" },
-  { code: "+971", country: "AE", flag: "🇦🇪", name: "United Arab Emirates" },
-  { code: "+49", country: "DE", flag: "🇩🇪", name: "Germany" },
-  { code: "+33", country: "FR", flag: "🇫🇷", name: "France" },
-  { code: "+31", country: "NL", flag: "🇳🇱", name: "Netherlands" },
-  { code: "+41", country: "CH", flag: "🇨🇭", name: "Switzerland" },
-  { code: "+61", country: "AU", flag: "🇦🇺", name: "Australia" },
-  { code: "+27", country: "ZA", flag: "🇿🇦", name: "South Africa" },
-  { code: "+65", country: "SG", flag: "🇸🇬", name: "Singapore" },
-];
-
 export const joinNowFormControls = [
   {
     id: "fullName",

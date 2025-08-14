@@ -21,7 +21,7 @@ import {
   FormMessage,
 } from "../ui/form";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
-import { countries } from "@/lib/constants";
+import { countries } from "@/lib/countries";
 
 interface FormData {
   fullName: string;
