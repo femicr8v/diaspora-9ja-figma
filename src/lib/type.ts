@@ -77,7 +77,6 @@ export interface Country {
   code: string;
   country: string;
   flag: string;
-  name: string;
 }
 
 export interface FormField {

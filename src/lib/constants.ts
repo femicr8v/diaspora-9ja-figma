@@ -28,7 +28,6 @@ import type {
   AboutCard,
   JoinNowPageBenefits,
   TrustIndicator,
-  Country,
 } from "./type";
 
 export const logoImage: string = "/logo.png";
@@ -307,31 +306,4 @@ export const trustIndicators: TrustIndicator[] = [
   { number: "15,000+", label: "Active Members", icon: Users },
   { number: "98%", label: "Satisfaction Rate", icon: Star },
   { number: "$50M+", label: "Investment Value", icon: TrendingUp },
-];
-
-export const joinNowFormControls = [
-  {
-    id: "fullName",
-    label: "Full Name *",
-    type: "text",
-    placeholder: "Your full name",
-  },
-  {
-    id: "email",
-    label: "Email Address *",
-    type: "email",
-    placeholder: "your@email.com",
-  },
-  {
-    id: "location",
-    label: "Location *",
-    type: "text",
-    placeholder: "Select your country",
-  },
-  {
-    id: "phone",
-    label: "Phone Number *",
-    type: "tel",
-    placeholder: "20 1234 5678",
-  },
 ];

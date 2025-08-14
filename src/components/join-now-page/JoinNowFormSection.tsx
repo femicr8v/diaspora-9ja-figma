@@ -26,8 +26,85 @@ import { countries } from "@/lib/countries";
 interface FormData {
   fullName: string;
   email: string;
+  location: string;
   countryCode: string;
   phone: string;
+}
+
+interface FormFieldConfig {
+  name: keyof FormData;
+  label: string;
+  placeholder: string;
+  type: "text" | "email" | "tel" | "select";
+  required: boolean;
+  validation?: any;
+  options?: Array<{ value: string; label: string; flag?: string }>;
+}
+
+// Helper function to convert country code to flag emoji
+function getFlagEmoji(countryCode: string): string {
+  const codePoints = countryCode
+    .toUpperCase()
+    .split("")
+    .map((char) => 127397 + char.charCodeAt(0));
+  return String.fromCodePoint(...codePoints);
+}
+
+// Country Select Component
+function CountrySelect({
+  value,
+  onValueChange,
+  error,
+}: {
+  value: string;
+  onValueChange: (value: string) => void;
+  error?: boolean;
+}) {
+  return (
+    <Select value={value} onValueChange={onValueChange}>
+      <SelectTrigger
+        className={`w-32 h-12 bg-muted/50 border transition-all duration-200 ${
+          error
+            ? "border-destructive focus:border-destructive bg-destructive/5"
+            : "border-border focus:border-primary focus:bg-background"
+        }`}
+      >
+        <SelectValue>
+          <div className="flex items-center space-x-2">
+            <span className="text-lg">
+              {countries.find((c) => `${c.code}-${c.flag}` === value)
+                ? getFlagEmoji(
+                    countries.find((c) => `${c.code}-${c.flag}` === value)!.flag
+                  )
+                : "🌍"}
+            </span>
+            <span className="text-sm font-medium">
+              {countries.find((c) => `${c.code}-${c.flag}` === value)?.code ||
+                value}
+            </span>
+          </div>
+        </SelectValue>
+      </SelectTrigger>
+      <SelectContent>
+        {countries.map((country, index) => (
+          <SelectItem
+            key={`${country.country}-${index}`}
+            value={`${country.code}-${country.flag}`}
+          >
+            <div className="flex items-center space-x-3 py-1">
+              <span className="text-lg">{getFlagEmoji(country.flag)}</span>
+              <div className="flex flex-col">
+                <span className="font-medium">{country.code}</span>
+                <span className="text-xs text-muted-foreground">
+                  {country.country}
+                </span>
+              </div>
+            </div>
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
 }
 
 export function JoinNowFormSection() {
@@ -35,6 +112,7 @@ export function JoinNowFormSection() {
     defaultValues: {
       fullName: "",
       email: "",
+      location: "",
       countryCode: "+44-GB",
       phone: "",
     },
@@ -47,6 +125,53 @@ export function JoinNowFormSection() {
     control,
     reset,
   } = form;
+
+  // Form fields configuration
+  const formFields: FormFieldConfig[] = [
+    {
+      name: "fullName",
+      label: "Full Name *",
+      placeholder: "Your full name",
+      type: "text",
+      required: true,
+      validation: {
+        required: "Full name is required",
+        minLength: {
+          value: 2,
+          message: "Full name must be at least 2 characters",
+        },
+      },
+    },
+    {
+      name: "email",
+      label: "Email Address *",
+      placeholder: "your@email.com",
+      type: "email",
+      required: true,
+      validation: {
+        required: "Email is required",
+        pattern: {
+          value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+          message: "Please enter a valid email address",
+        },
+      },
+    },
+    {
+      name: "location",
+      label: "Location *",
+      placeholder: "Select your country",
+      type: "select",
+      required: true,
+      validation: {
+        required: "Location is required",
+      },
+      options: countries.map((country) => ({
+        value: country.country,
+        label: country.country,
+        flag: country.flag,
+      })),
+    },
+  ];
 
   const onSubmit = async (data: FormData) => {
     try {
@@ -66,6 +191,7 @@ export function JoinNowFormSection() {
       // onShowPayment({
       //   fullName: data.fullName,
       //   email: data.email,
+      //   location: data.location,
       //   phone: `${data.countryCode} ${data.phone}`
       // });
     } catch (error) {
@@ -99,75 +225,100 @@ export function JoinNowFormSection() {
 
           <Form {...form}>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              <FormField
-                control={control}
-                name="fullName"
-                rules={{
-                  required: "Full name is required",
-                  minLength: {
-                    value: 2,
-                    message: "Full name must be at least 2 characters",
-                  },
-                }}
-                render={({ field, fieldState }) => (
-                  <FormItem>
-                    <FormLabel className="font-semibold">Full Name *</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Your full name"
-                        className={`h-12 bg-muted/50 border transition-all duration-200 ${
-                          fieldState.error
-                            ? "border-destructive focus:border-destructive bg-destructive/5"
-                            : "border-border focus:border-primary focus:bg-background"
-                        }`}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="flex items-center">
-                      {fieldState.error && (
-                        <span className="w-1 h-1 bg-destructive rounded-full mr-2" />
-                      )}
-                    </FormMessage>
-                  </FormItem>
-                )}
-              />
+              {/* Regular form fields */}
+              {formFields.map((fieldConfig) => (
+                <FormField
+                  key={fieldConfig.name}
+                  control={control}
+                  name={fieldConfig.name}
+                  rules={fieldConfig.validation}
+                  render={({ field, fieldState }) => (
+                    <FormItem>
+                      <FormLabel className="font-semibold">
+                        {fieldConfig.label}
+                      </FormLabel>
+                      <FormControl>
+                        {fieldConfig.type === "select" ? (
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <SelectTrigger
+                              className={`h-12 bg-muted/50 border transition-all duration-200 ${
+                                fieldState.error
+                                  ? "border-destructive focus:border-destructive bg-destructive/5"
+                                  : "border-border focus:border-primary focus:bg-background"
+                              }`}
+                            >
+                              <SelectValue
+                                placeholder={fieldConfig.placeholder}
+                              >
+                                {fieldConfig.options?.find(
+                                  (option) => option.value === field.value
+                                ) && (
+                                  <div className="flex items-center space-x-2">
+                                    <span className="text-lg">
+                                      {
+                                        fieldConfig.options.find(
+                                          (option) =>
+                                            option.value === field.value
+                                        )?.flag
+                                      }
+                                    </span>
+                                    <span>
+                                      {
+                                        fieldConfig.options.find(
+                                          (option) =>
+                                            option.value === field.value
+                                        )?.label
+                                      }
+                                    </span>
+                                  </div>
+                                )}
+                              </SelectValue>
+                            </SelectTrigger>
+                            <SelectContent>
+                              {fieldConfig.options?.map((option, index) => (
+                                <SelectItem
+                                  key={`${option.value}-${index}`}
+                                  value={option.value}
+                                >
+                                  <div className="flex items-center space-x-3 py-1">
+                                    {option.flag && (
+                                      <span className="text-lg">
+                                        {getFlagEmoji(option.flag)}
+                                      </span>
+                                    )}
+                                    <span>{option.label}</span>
+                                  </div>
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        ) : (
+                          <Input
+                            type={fieldConfig.type}
+                            placeholder={fieldConfig.placeholder}
+                            className={`h-12 bg-muted/50 border transition-all duration-200 ${
+                              fieldState.error
+                                ? "border-destructive focus:border-destructive bg-destructive/5"
+                                : "border-border focus:border-primary focus:bg-background"
+                            }`}
+                            {...field}
+                          />
+                        )}
+                      </FormControl>
+                      <FormMessage className="flex items-center">
+                        {fieldState.error && (
+                          <span className="w-1 h-1 bg-destructive rounded-full mr-2" />
+                        )}
+                      </FormMessage>
+                    </FormItem>
+                  )}
+                />
+              ))}
 
-              <FormField
-                control={control}
-                name="email"
-                rules={{
-                  required: "Email is required",
-                  pattern: {
-                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                    message: "Please enter a valid email address",
-                  },
-                }}
-                render={({ field, fieldState }) => (
-                  <FormItem>
-                    <FormLabel className="font-semibold">
-                      Email Address *
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="email"
-                        placeholder="your@email.com"
-                        className={`h-12 bg-muted/50 border transition-all duration-200 ${
-                          fieldState.error
-                            ? "border-destructive focus:border-destructive bg-destructive/5"
-                            : "border-border focus:border-primary focus:bg-background"
-                        }`}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="flex items-center">
-                      {fieldState.error && (
-                        <span className="w-1 h-1 bg-destructive rounded-full mr-2" />
-                      )}
-                    </FormMessage>
-                  </FormItem>
-                )}
-              />
-
+              {/* Phone number field with country code */}
               <div className="space-y-2">
                 <FormLabel className="font-semibold">Phone Number *</FormLabel>
                 <div className="flex gap-3">
@@ -177,57 +328,11 @@ export function JoinNowFormSection() {
                     render={({ field, fieldState }) => (
                       <FormItem>
                         <FormControl>
-                          <Select
+                          <CountrySelect
                             value={field.value}
                             onValueChange={field.onChange}
-                          >
-                            <SelectTrigger
-                              className={`w-32 h-12 bg-muted/50 border transition-all duration-200 ${
-                                fieldState.error
-                                  ? "border-destructive focus:border-destructive bg-destructive/5"
-                                  : "border-border focus:border-primary focus:bg-background"
-                              }`}
-                            >
-                              <SelectValue>
-                                <div className="flex items-center space-x-2">
-                                  <span className="text-lg">
-                                    {countries.find(
-                                      (c) =>
-                                        `${c.code}-${c.country}` === field.value
-                                    )?.flag || "🌍"}
-                                  </span>
-                                  <span className="text-sm font-medium">
-                                    {countries.find(
-                                      (c) =>
-                                        `${c.code}-${c.country}` === field.value
-                                    )?.code || field.value}
-                                  </span>
-                                </div>
-                              </SelectValue>
-                            </SelectTrigger>
-                            <SelectContent>
-                              {countries.map((country, index) => (
-                                <SelectItem
-                                  key={`${country.country}-${index}`}
-                                  value={`${country.code}-${country.country}`}
-                                >
-                                  <div className="flex items-center space-x-3 py-1">
-                                    <span className="text-lg">
-                                      {country.flag}
-                                    </span>
-                                    <div className="flex flex-col">
-                                      <span className="font-medium">
-                                        {country.code}
-                                      </span>
-                                      <span className="text-xs text-muted-foreground">
-                                        {country.name}
-                                      </span>
-                                    </div>
-                                  </div>
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
+                            error={!!fieldState.error}
+                          />
                         </FormControl>
                       </FormItem>
                     )}
