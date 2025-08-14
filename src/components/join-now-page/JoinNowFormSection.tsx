@@ -26,23 +26,13 @@ import { countries } from "@/lib/countries";
 import { JoinNowFormControls, JoinNowFormFormData } from "@/lib/type";
 import { joinNowFormControls } from "@/lib/constants";
 
-// Helper function to convert country code to flag emoji
-function getFlagEmoji(countryCode: string): string {
-  if (!countryCode || countryCode.length !== 2) return "🌍";
-  const codePoints = countryCode
-    .toUpperCase()
-    .split("")
-    .map((char) => 127397 + char.charCodeAt(0));
-  return String.fromCodePoint(...codePoints);
-}
-
 export function JoinNowFormSection() {
   const form = useForm<JoinNowFormFormData>({
     defaultValues: {
       fullName: "",
       email: "",
       location: "",
-      countryCode: "+44-GB",
+      countryCode: "+44",
       phone: "",
     },
     mode: "onChange",
@@ -60,11 +50,9 @@ export function JoinNowFormSection() {
       // Simulate form processing
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      const countryCode = data.countryCode.split("-")[0];
       console.log("Form submitted:", {
         ...data,
-        countryCode,
-        phone: `${countryCode} ${data.phone}`,
+        phone: `${data.countryCode} ${data.phone}`,
       });
 
       // Reset form after successful submission
@@ -142,11 +130,13 @@ export function JoinNowFormSection() {
                                     );
                                   return selectedOption ? (
                                     <div className="flex items-center space-x-2">
-                                      <span className="text-lg">
-                                        {getFlagEmoji(
-                                          selectedOption.flag || "us"
-                                        )}
-                                      </span>
+                                      {selectedOption.flag && (
+                                        <img
+                                          src={selectedOption.flag}
+                                          alt={`${selectedOption.label} flag`}
+                                          className="w-5 h-4 object-cover rounded-sm"
+                                        />
+                                      )}
                                       <span>{selectedOption.label}</span>
                                     </div>
                                   ) : null;
@@ -161,9 +151,11 @@ export function JoinNowFormSection() {
                                 >
                                   <div className="flex items-center space-x-3 py-1">
                                     {option.flag && (
-                                      <span className="text-lg">
-                                        {getFlagEmoji(option.flag)}
-                                      </span>
+                                      <img
+                                        src={option.flag}
+                                        alt={`${option.label} flag`}
+                                        className="w-5 h-4 object-cover rounded-sm text-lg"
+                                      />
                                     )}
                                     <span>{option.label}</span>
                                   </div>
@@ -235,15 +227,25 @@ export function JoinNowFormSection() {
                               <SelectTrigger className="w-auto h-full border-0 bg-transparent focus:ring-0 focus:ring-offset-0 rounded-r-none pr-2">
                                 <SelectValue>
                                   <div className="flex items-center space-x-2">
-                                    <span className="text-xl">
-                                      {getFlagEmoji(
-                                        countries.find(
-                                          (c) =>
-                                            `${c.code}-${c.flag}` ===
-                                            countryField.value
-                                        )?.flag || "us"
-                                      )}
-                                    </span>
+                                    {(() => {
+                                      const selectedCountry = countries.find(
+                                        (c) => c.code === countryField.value
+                                      );
+                                      return selectedCountry ? (
+                                        <>
+                                          <img
+                                            src={selectedCountry.flag}
+                                            alt={`${selectedCountry.country} flag`}
+                                            className="w-5 h-4 object-cover rounded-sm"
+                                          />
+                                          <span className="text-sm font-medium">
+                                            {selectedCountry.code}
+                                          </span>
+                                        </>
+                                      ) : (
+                                        <span className="text-sm">Select</span>
+                                      );
+                                    })()}
                                   </div>
                                 </SelectValue>
                               </SelectTrigger>
@@ -251,12 +253,14 @@ export function JoinNowFormSection() {
                                 {countries.map((country, index) => (
                                   <SelectItem
                                     key={`${country.country}-${index}`}
-                                    value={`${country.code}-${country.flag}`}
+                                    value={country.code}
                                   >
                                     <div className="flex items-center space-x-3 py-1">
-                                      <span className="text-lg">
-                                        {getFlagEmoji(country.flag)}
-                                      </span>
+                                      <img
+                                        src={country.flag}
+                                        alt={`${country.country} flag`}
+                                        className="w-5 h-4 object-cover rounded-sm"
+                                      />
                                       <div className="flex flex-col">
                                         <span className="font-medium">
                                           {country.code}
