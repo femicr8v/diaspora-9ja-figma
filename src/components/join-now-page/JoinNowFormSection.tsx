@@ -318,65 +318,111 @@ export function JoinNowFormSection() {
                 />
               ))}
 
-              {/* Phone number field with country code */}
-              <div className="space-y-2">
-                <FormLabel className="font-semibold">Phone Number *</FormLabel>
-                <div className="flex gap-3">
-                  <FormField
-                    control={control}
-                    name="countryCode"
-                    render={({ field, fieldState }) => (
-                      <FormItem>
-                        <FormControl>
-                          <CountrySelect
-                            value={field.value}
-                            onValueChange={field.onChange}
-                            error={!!fieldState.error}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={control}
-                    name="phone"
-                    rules={{
-                      required: "Phone number is required",
-                      pattern: {
-                        value: /^[\d\s\-\(\)\+]{7,}$/,
-                        message:
-                          "Please enter a valid phone number (minimum 7 digits)",
-                      },
-                      minLength: {
-                        value: 7,
-                        message: "Phone number must be at least 7 characters",
-                      },
-                    }}
-                    render={({ field, fieldState }) => (
-                      <FormItem className="flex-1">
-                        <FormControl>
-                          <Input
-                            type="tel"
-                            placeholder="20 1234 5678"
-                            className={`h-12 bg-muted/50 border transition-all duration-200 ${
-                              fieldState.error
-                                ? "border-destructive focus:border-destructive bg-destructive/5"
-                                : "border-border focus:border-primary focus:bg-background"
-                            }`}
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage className="flex items-center">
-                          {fieldState.error && (
-                            <span className="w-1 h-1 bg-destructive rounded-full mr-2" />
+              {/* Phone number field with integrated country code */}
+              <FormField
+                control={control}
+                name="phone"
+                rules={{
+                  required: "Phone number is required",
+                  pattern: {
+                    value: /^[\d\s\-\(\)\+]{7,}$/,
+                    message:
+                      "Please enter a valid phone number (minimum 7 digits)",
+                  },
+                  minLength: {
+                    value: 7,
+                    message: "Phone number must be at least 7 characters",
+                  },
+                }}
+                render={({ field, fieldState }) => (
+                  <FormItem>
+                    <FormLabel className="font-semibold">
+                      Phone Number *
+                    </FormLabel>
+                    <FormControl>
+                      <div
+                        className={`relative flex items-center h-12 bg-muted/50 border rounded-md transition-all duration-200 ${
+                          fieldState.error
+                            ? "border-destructive focus-within:border-destructive bg-destructive/5"
+                            : "border-border focus-within:border-primary focus-within:bg-background"
+                        }`}
+                      >
+                        {/* Country Code Selector */}
+                        <FormField
+                          control={control}
+                          name="countryCode"
+                          render={({ field: countryField }) => (
+                            <Select
+                              value={countryField.value}
+                              onValueChange={countryField.onChange}
+                            >
+                              <SelectTrigger className="w-auto h-full border-0 bg-transparent focus:ring-0 focus:ring-offset-0 rounded-r-none pr-2">
+                                <SelectValue>
+                                  <div className="flex items-center space-x-2">
+                                    <span className="text-lg">
+                                      {countries.find(
+                                        (c) =>
+                                          `${c.code}-${c.flag}` ===
+                                          countryField.value
+                                      )
+                                        ? getFlagEmoji(
+                                            countries.find(
+                                              (c) =>
+                                                `${c.code}-${c.flag}` ===
+                                                countryField.value
+                                            )!.flag
+                                          )
+                                        : "🇺🇸"}
+                                    </span>
+                                  </div>
+                                </SelectValue>
+                              </SelectTrigger>
+                              <SelectContent>
+                                {countries.map((country, index) => (
+                                  <SelectItem
+                                    key={`${country.country}-${index}`}
+                                    value={`${country.code}-${country.flag}`}
+                                  >
+                                    <div className="flex items-center space-x-3 py-1">
+                                      <span className="text-lg">
+                                        {getFlagEmoji(country.flag)}
+                                      </span>
+                                      <div className="flex flex-col">
+                                        <span className="font-medium">
+                                          {country.code}
+                                        </span>
+                                        <span className="text-xs text-muted-foreground">
+                                          {country.country}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
                           )}
-                        </FormMessage>
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
+                        />
+
+                        {/* Separator */}
+                        <div className="w-px h-6 bg-border mx-2" />
+
+                        {/* Phone Number Input */}
+                        <Input
+                          type="tel"
+                          placeholder="(000) 000-0000"
+                          className="flex-1 border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 h-full rounded-l-none pl-0"
+                          {...field}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage className="flex items-center">
+                      {fieldState.error && (
+                        <span className="w-1 h-1 bg-destructive rounded-full mr-2" />
+                      )}
+                    </FormMessage>
+                  </FormItem>
+                )}
+              />
 
               <Button
                 type="submit"
