@@ -1,7 +1,5 @@
-import { useEffect, useState } from "react";
-import { Button } from "./ui/button";
-import { Card, CardContent } from "./ui/card";
-import { Badge } from "./ui/badge";
+"use client";
+
 import {
   CheckCircle,
   ArrowRight,
@@ -12,7 +10,14 @@ import {
   Users,
   TrendingUp,
 } from "lucide-react";
-import logoImage from "figma:asset/0be1b3fe61946b6a71598093280579589812311d.png";
+
+import Link from "next/link";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { logoImage, logoText } from "@/lib/constants";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface ThankYouPageProps {
   userName: string;
@@ -53,7 +58,7 @@ export default function ThankYouPage({
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-background to-accent/10 relative overflow-hidden">
+    <section className="min-h-screen bg-gradient-to-br from-green-50 via-background to-accent/10 relative overflow-hidden">
       {/* Confetti Animation Placeholder */}
       {showConfetti && (
         <div className="fixed inset-0 pointer-events-none z-10">
@@ -88,29 +93,33 @@ export default function ThankYouPage({
         </div>
       )}
 
-      {/* Header */}
-      <header className="border-b border-border/40 bg-background/95 backdrop-blur-sm relative z-20">
+      <header className="border-b-2 border-border/40 bg-background/95 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto max-w-7xl px-6 py-4 flex items-center justify-center">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 flex items-center justify-center">
-              <img
+            <Link
+              href="/"
+              className="w-10 h-10 flex items-center justify-center"
+            >
+              <Image
                 src={logoImage}
+                width={40}
+                height={40}
                 alt="Diaspora 9ja Logo"
-                className="w-10 h-10 object-contain"
+                className="size-10 object-contain"
               />
-            </div>
+            </Link>
             <h1 className="text-xl font-bold text-primary font-headers">
-              Diaspora 9ja
+              {logoText}
             </h1>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <div className="container mx-auto max-w-4xl px-6 py-16 text-center relative z-20">
+      <main className="container mx-auto max-w-6xl px-6 py-16 text-center relative z-20">
         {/* Success Icon */}
         <div className="mb-8 flex justify-center">
-          <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center shadow-lg animate-bounce">
+          <div className="w-24 h-24 bg-primary/5 rounded-full flex items-center justify-center shadow-lg animate-bounce">
             <CheckCircle className="w-12 h-12 text-green-600" />
           </div>
         </div>
@@ -119,20 +128,19 @@ export default function ThankYouPage({
         <div className="mb-12">
           <Badge
             variant="secondary"
-            className="mb-6 bg-green-100 text-green-700 border-green-200 font-semibold text-base px-4 py-2"
+            className="mb-4 md:mb-10 bg-primary/10 text-primary border-primary/20 text-sm font-semibold"
           >
             🎉 Welcome to the Community!
           </Badge>
 
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold gradient-text font-headers leading-tight mb-6">
-            Thank You for Joining, {userName}!
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold gradient-text leading-tight mb-6">
+            Your payment was successful, {userName}!
           </h1>
 
           <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed mb-8 max-w-3xl mx-auto">
-            Your payment was successful. Welcome to Diaspora 9ja — the most
-            trusted platform connecting Nigerians worldwide. You're now part of
-            an exclusive community of 15,000+ ambitious professionals and
-            entrepreneurs.
+            Welcome to {logoText}, the most trusted platform connecting
+            Nigerians worldwide. You're now part of an exclusive community of
+            15,000+ ambitious professionals and entrepreneurs.
           </p>
         </div>
 
@@ -264,7 +272,7 @@ export default function ThankYouPage({
             </span>
           </div>
         </div>
-      </div>
-    </div>
+      </main>
+    </section>
   );
 }

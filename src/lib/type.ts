@@ -38,14 +38,6 @@ export interface FAQ {
   answer: string;
 }
 
-export interface ContactMethod {
-  icon: LucideIcon;
-  title: string;
-  value: string;
-  description: string;
-  action: string;
-}
-
 export interface NavigationLink {
   href: string;
   label: string;
@@ -120,4 +112,57 @@ export interface JoinNowFormControls {
   required: boolean;
   validation?: any;
   options?: Array<{ value: string; label: string; flag?: string }>;
+}
+
+export interface CommunityShowcase {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+}
+
+export interface TestimonialsSection {
+  img: string;
+  story: string;
+  name: string;
+  title: string;
+  dateJoined: string;
+}
+
+export interface ContactMethod {
+  icon: LucideIcon;
+  title: string;
+  value: string;
+  description: string;
+  action: string;
+}
+
+export interface ContactHours {
+  day: string;
+  time: string;
+}
+
+export interface ContactFormData {
+  name: string;
+  email: string;
+  phone: string;
+  company: string;
+  message: string;
+}
+
+export interface ContactFormControls {
+  name: keyof ContactFormData;
+  label: string;
+  placeholder: string;
+  type: "text" | "email" | "tel" | "textarea";
+  required: boolean;
+  validation?: any;
+  rows?: number;
+}
+
+export interface FooterLinks {
+  title: string;
+  links: {
+    href: string;
+    label: string;
+  }[];
 }

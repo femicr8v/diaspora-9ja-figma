@@ -6,11 +6,7 @@ import { cn } from "@/lib/utils";
 import { buttonVariants } from "../ui/button";
 import { logoImage, logoText, navigationLinks } from "@/lib/constants";
 
-interface HomepageHeaderProps {
-  onGetStarted: () => void;
-}
-
-export function HomepageHeader({ onGetStarted }: HomepageHeaderProps) {
+export function HomepageHeader() {
   return (
     <header className="border-b-2 border-border/40 bg-background/95 backdrop-blur-sm sticky top-0 z-50">
       <div className="container mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">

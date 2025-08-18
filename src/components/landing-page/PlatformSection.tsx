@@ -1,11 +1,11 @@
 "use client";
 
-import { ArrowRight, CheckCircle } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
-import { Card, CardHeader, CardContent, CardFooter } from "../ui/card";
-import { useState, useEffect, useCallback } from "react";
 import { platformFeatures } from "@/lib/constants";
+import { ArrowRight, CheckCircle } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import { Card, CardHeader, CardContent, CardFooter } from "../ui/card";
 
 interface PlatformSectionProps {
   onGetStarted: () => void;

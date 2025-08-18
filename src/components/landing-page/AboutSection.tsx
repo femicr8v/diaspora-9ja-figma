@@ -1,8 +1,8 @@
 "use client";
 
-import { CheckCircle, Users } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { Card, CardContent } from "../ui/card";
+import { CheckCircle, Users } from "lucide-react";
 import { aboutCards, logoText } from "../../lib/constants";
 
 export function AboutSection() {

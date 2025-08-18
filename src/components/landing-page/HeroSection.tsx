@@ -1,17 +1,13 @@
 "use client";
 
-import { ArrowRight, CheckCircle } from "lucide-react";
-import { Badge } from "../ui/badge";
-import { Button, buttonVariants } from "../ui/button";
-import { aboutStats } from "@/lib/constants";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
+import { Badge } from "../ui/badge";
+import { ArrowRight } from "lucide-react";
+import { aboutStats } from "@/lib/constants";
+import { buttonVariants } from "../ui/button";
 
-interface HeroSectionProps {
-  onGetStarted: () => void;
-}
-
-export function HeroSection({ onGetStarted }: HeroSectionProps) {
+export function HeroSection() {
   const repeatingPlusGreenPattern =
     "bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23e8f5e8%22%20fill-opacity%3D%220.3%22%3E%3Cpath%20d%3D%22m36%2034v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6%2034v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6%204V0H4v4H0v2h4v4h2V6h4V4H6z%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]";
 

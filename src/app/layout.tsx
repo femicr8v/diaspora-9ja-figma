@@ -17,7 +17,11 @@ const roboto = Roboto({
 export const metadata: Metadata = {
   title: "Diaspo9ja",
   description: "Connecting Nigerians Globally",
+  icons: {
+    icon: "/logo.png",
+  },
 };
+
 
 export default function RootLayout({
   children,

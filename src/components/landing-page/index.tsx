@@ -24,15 +24,15 @@ export function LandingPage() {
   return (
     <div className="min-h-screen">
       <PromoBanner showPromo={showPromo} onClose={() => setShowPromo(false)} />
-      <HomepageHeader onGetStarted={handleGetStarted} />
-      <HeroSection onGetStarted={handleGetStarted} />
+      <HomepageHeader />
+      <HeroSection />
       <AboutSection />
-      <CommunityStatsSection onGetStarted={handleGetStarted} />
+      <CommunityStatsSection />
       <PlatformSection onGetStarted={handleGetStarted} />
-      <CommunityShowcaseSection onGetStarted={handleGetStarted} />
+      <CommunityShowcaseSection />
       <TestimonialsSection />
       <FAQSection />
-      <CallToActionSection onGetStarted={handleGetStarted} />
+      <CallToActionSection />
       <ContactSection />
       <Footer />
     </div>

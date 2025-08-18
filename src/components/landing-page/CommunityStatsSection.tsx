@@ -1,22 +1,16 @@
 "use client";
 
+import Link from "next/link";
+import { cn } from "@/lib/utils";
 import { Badge } from "../ui/badge";
-import { Button, buttonVariants } from "../ui/button";
 import { ArrowRight } from "lucide-react";
+import { buttonVariants } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
 import { useState, useEffect, useCallback } from "react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { communityStats, communityProfiles } from "@/lib/constants";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
 
-interface CommunityStatsSectionProps {
-  onGetStarted: () => void;
-}
-
-export function CommunityStatsSection({
-  onGetStarted,
-}: CommunityStatsSectionProps) {
+export function CommunityStatsSection() {
   const [membersSlide, setMembersSlide] = useState(0);
   const [itemsPerView, setItemsPerView] = useState(3);
   const [isAutoScrollPaused, setIsAutoScrollPaused] = useState(false);

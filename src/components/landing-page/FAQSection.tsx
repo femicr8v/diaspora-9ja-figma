@@ -1,19 +1,23 @@
 "use client";
 
-import { ArrowRight } from "lucide-react";
-import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
 import {
   Accordion,
   AccordionItem,
   AccordionTrigger,
   AccordionContent,
 } from "../ui/accordion";
+
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
 import { faqs } from "@/lib/constants";
+import { ArrowRight } from "lucide-react";
 
 export function FAQSection() {
   return (
-    <section id="faqs" className="py-16 md:py-24 px-6 bg-background">
+    <section
+      id="faqs"
+      className="py-16 md:py-24 px-6 bg-gradient-to-bl from-secondary/30 to-accent/10"
+    >
       <div className="container mx-auto max-w-7xl">
         <div className="text-center mb-16 md:mb-20">
           <Badge
@@ -31,7 +35,7 @@ export function FAQSection() {
           </p>
         </div>
 
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           <Accordion
             type="single"
             collapsible
@@ -41,7 +45,7 @@ export function FAQSection() {
               <AccordionItem
                 key={index}
                 value={`item-${index}`}
-                className="border border-border/40 rounded-xl px-4 md:px-8 bg-background/50 hover:bg-background/80 transition-colors"
+                className="border border-border/40 rounded-xl px-4 md:px-8 bg-background/40 hover:bg-background/70 last:border-b transition-colors"
               >
                 <AccordionTrigger className="text-left hover:no-underline py-6 md:py-8 text-base md:text-lg">
                   <span className="font-headers font-bold pr-4">
@@ -61,7 +65,7 @@ export function FAQSection() {
             </p>
             <Button
               variant="outline"
-              className="border-primary/20 text-primary hover:bg-primary/5 text-base"
+              className="border-primary/20 text-primary hover:text-primary hover:bg-primary/5 text-base"
               onClick={() =>
                 document
                   .getElementById("contact")

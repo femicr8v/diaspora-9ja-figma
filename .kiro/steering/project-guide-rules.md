@@ -14,3 +14,5 @@ Rule: When working on this project, always follow these guidelines:
 3. **Always prefer using Playwright MCP tools** for browser-related actions (e.g., navigation, clicking elements, filling forms, taking screenshots, inspecting elements, testing user-visible behavior).
 
 4. Ensure that code is clean, semantic, and accessible, following best practices for maintainability.
+
+5. **Always prefer using pnpm** as the package managers.

@@ -1,21 +1,16 @@
 "use client";
 
-import { ArrowRight, CheckCircle } from "lucide-react";
-import { Badge } from "../ui/badge";
-import { Button, buttonVariants } from "../ui/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { Badge } from "../ui/badge";
+import { buttonVariants } from "../ui/button";
+import { ArrowRight, CheckCircle } from "lucide-react";
+import { CTAstats } from "@/lib/constants";
 
-interface CallToActionSectionProps {
-  onGetStarted: () => void;
-}
-
-export function CallToActionSection({
-  onGetStarted,
-}: CallToActionSectionProps) {
+export function CallToActionSection() {
   return (
     <section
-      className="py-24 md:py-32 px-6 relative overflow-hidden"
+      className="py-16 md:py-24 px-6 relative overflow-hidden"
       style={{
         backgroundImage:
           'url("https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1400&h=800&fit=crop")',
@@ -24,7 +19,7 @@ export function CallToActionSection({
       }}
     >
       {/* Enhanced Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-primary/95 via-primary/85 to-accent/90"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/95 via-primary/85 to-accent/90" />
 
       <div className="container mx-auto max-w-7xl text-center relative z-10">
         <Badge
@@ -34,7 +29,7 @@ export function CallToActionSection({
           🚀 Join the Movement
         </Badge>
 
-        <h2 className="text-3xl md:text-4xl lg:text-5xl mb-6 md:mb-8 text-white font-headers font-bold leading-tight">
+        <h2 className="max-md:max-w-xs text-3xl md:text-4xl lg:text-5xl mb-6 md:mb-8 text-white font-headers font-bold leading-tight">
           Ready to Connect with Your Global Community?
         </h2>
 
@@ -42,7 +37,7 @@ export function CallToActionSection({
           Join thousands of ambitious Nigerians who have found their digital
           homeland with us. Whether you're looking to expand your business, find
           investment opportunities, connect with mentors, or simply stay
-          connected to your roots while thriving globally— your journey starts
+          connected to your roots while thriving globally. Your journey starts
           here.
         </p>
 
@@ -59,25 +54,16 @@ export function CallToActionSection({
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 text-white/90">
-          <div className="flex items-center justify-center space-x-3">
-            <CheckCircle className="w-5 md:w-6 h-5 md:h-6 text-green-300" />
-            <span className="text-sm md:text-base font-medium">
-              Free to join
-            </span>
-          </div>
-          <div className="flex items-center justify-center space-x-3">
-            <CheckCircle className="w-5 md:w-6 h-5 md:h-6 text-green-300" />
-            <span className="text-sm md:text-base font-medium">
-              Instant access
-            </span>
-          </div>
-          <div className="flex items-center justify-center space-x-3">
-            <CheckCircle className="w-5 md:w-6 h-5 md:h-6 text-green-300" />
-            <span className="text-sm md:text-base font-medium">
-              Global network
-            </span>
-          </div>
+        <div className="flex flex-col items-center justify-center md:flex-row gap-6 md:gap-12 text-white/90">
+          {CTAstats.map((stat) => (
+            <div
+              key={stat + "w"}
+              className="flex items-center justify-center space-x-2"
+            >
+              <CheckCircle className="w-5 md:w-6 h-5 md:h-6 text-green-300" />
+              <span className="text-sm md:text-base font-medium">{stat}</span>
+            </div>
+          ))}
         </div>
       </div>
     </section>

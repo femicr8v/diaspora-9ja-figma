@@ -29,6 +29,11 @@ import type {
   JoinNowPageBenefits,
   TrustIndicator,
   JoinNowFormControls,
+  CommunityShowcase,
+  TestimonialsSection,
+  ContactHours,
+  ContactFormControls,
+  FooterLinks,
 } from "./type";
 import { countries } from "./countries";
 
@@ -201,30 +206,6 @@ export const faqs: FAQ[] = [
   },
 ];
 
-export const contactMethods: ContactMethod[] = [
-  {
-    icon: Mail,
-    title: "Email Us",
-    value: "hello@diaspora9ja.com",
-    description: "For general inquiries and support",
-    action: "mailto:hello@diaspora9ja.com",
-  },
-  {
-    icon: Phone,
-    title: "Call Us",
-    value: "+44 20 7946 0958",
-    description: "Business hours: 9 AM - 6 PM GMT",
-    action: "tel:+442079460958",
-  },
-  {
-    icon: MessageSquare,
-    title: "Live Chat",
-    value: "Available 24/7",
-    description: "Instant support for members",
-    action: "#",
-  },
-];
-
 export const navigationLinks: NavigationLink[] = [
   { href: "#about", label: "About" },
   { href: "#platform", label: "Platform" },
@@ -354,4 +335,162 @@ export const trustIndicators: TrustIndicator[] = [
   { number: "15,000+", label: "Active Members", icon: Users },
   { number: "98%", label: "Satisfaction Rate", icon: Star },
   { number: "$50M+", label: "Investment Value", icon: TrendingUp },
+];
+
+export const communityShowcase: CommunityShowcase[] = [
+  {
+    icon: Globe,
+    title: "Global Reach",
+    description:
+      "From Lagos to London, New York to Nairobi, our members are making impact everywhere",
+  },
+  {
+    icon: Briefcase,
+    title: "Every Industry",
+    description:
+      "Tech entrepreneurs, healthcare professionals, artists, and everything in between",
+  },
+  {
+    icon: Heart,
+    title: "One Purpose",
+    description:
+      "United by heritage, driven by success, connected by community",
+  },
+];
+
+export const testimonialsSection: TestimonialsSection[] = [
+  {
+    img: "https://images.unsplash.com/photo-1494790108755-2616b612b190?w=64&h=64&fit=crop&crop=face",
+    story:
+      "Diaspora 9ja has been instrumental in helping me navigate my career in Canada. The mentorship program connected me with someone who had walked the same path. Within 6 months, I landed my dream job and started my own consulting practice.",
+    name: "Adaora K.",
+    title: "Software Engineer & Consultant, Toronto",
+    dateJoined: "2023",
+  },
+  {
+    img: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=64&h=64&fit=crop&crop=face",
+    story:
+      "The investment opportunities shared on this platform are game-changing. I've connected with like-minded investors and we've successfully funded three startups in Lagos. The ROI has been exceptional!",
+    name: "Chinedu M.",
+    title: "Angel Investor & Business Owner, London",
+    dateJoined: "2022",
+  },
+];
+
+export const CTAstats: string[] = [
+  "Instant access",
+  "Global network",
+  "Premium content",
+];
+
+export const contactMethods: ContactMethod[] = [
+  {
+    icon: Mail,
+    title: "Email Us",
+    value: "hello@diaspora9ja.com",
+    description: "For general inquiries and support",
+    action: "mailto:hello@diaspora9ja.com",
+  },
+  {
+    icon: Phone,
+    title: "Call Us",
+    value: "+44 20 7946 0958",
+    description: "Business hours: 9 AM - 6 PM GMT",
+    action: "tel:+442079460958",
+  },
+  {
+    icon: MessageSquare,
+    title: "Live Chat",
+    value: "Available 24/7",
+    description: "Instant support for members",
+    action: "#",
+  },
+];
+
+export const contactHours: ContactHours[] = [
+  { day: "Monday - Friday", time: "9 AM - 6 PM GMT" },
+  { day: "Saturday", time: "10 AM - 4 PM GMT" },
+  { day: "Sunday", time: "Closed" },
+];
+
+export const contactFormControls: ContactFormControls[] = [
+  {
+    name: "name",
+    label: "Name *",
+    placeholder: "Your name",
+    type: "text",
+    required: true,
+    validation: {
+      required: "Name is required",
+      minLength: {
+        value: 2,
+        message: "Name must be at least 2 characters",
+      },
+    },
+  },
+  {
+    name: "email",
+    label: "Email *",
+    placeholder: "your@email.com",
+    type: "email",
+    required: true,
+    validation: {
+      required: "Email is required",
+      pattern: {
+        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        message: "Please enter a valid email address",
+      },
+    },
+  },
+  {
+    name: "phone",
+    label: "Phone",
+    placeholder: "+44 20 1234 5678",
+    type: "tel",
+    required: false,
+  },
+  {
+    name: "company",
+    label: "Company",
+    placeholder: "Your company",
+    type: "text",
+    required: false,
+  },
+  {
+    name: "message",
+    label: "Message *",
+    placeholder: "Tell us more about your inquiry...",
+    type: "textarea",
+    required: true,
+    rows: 4,
+    validation: {
+      required: "Message is required",
+      minLength: {
+        value: 10,
+        message: "Message must be at least 10 characters",
+      },
+    },
+  },
+];
+
+export const footerLinks: FooterLinks[] = [
+  {
+    title: "Quick Links",
+    links: [
+      { href: "#bout", label: "About Us" },
+      { href: "#platform", label: "Platform" },
+      { href: "#community", label: "Community" },
+      { href: "#testimonials", label: "Testimonials" },
+      { href: "#faqs", label: "FAQs" },
+    ],
+  },
+  {
+    title: "Legal & Support",
+    links: [
+      { href: "#privacy", label: "Privacy Policy" },
+      { href: "#terms", label: "Terms of Service" },
+      { href: "#contact", label: "Contact Us" },
+      { href: "#help", label: "Help Center" },
+    ],
+  },
 ];

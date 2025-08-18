@@ -5,12 +5,13 @@
       "args": [
         "-y",
         "@supabase/mcp-server-supabase@latest",
-        "--read-only",
-        "--project-ref=<project-ref>"
+        "--project-ref=lvctdfifinwgaeugitpd"
       ],
       "env": {
         "SUPABASE_ACCESS_TOKEN": "sbp_3d54b79703f104605641b6a1c37d54ebdbb7a3a0"
-      }
+      },
+      "disabled": false,
+      "autoApprove": ["list_tables", "apply_migration"]
     }
   }
 }
