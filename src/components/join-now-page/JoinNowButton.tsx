@@ -1,7 +1,8 @@
 "use client";
+
 import { useState } from "react";
-import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import { Button } from "../ui/button";
 import { Loader2, ArrowLeft } from "lucide-react";
 
 export function JoinNowButton({

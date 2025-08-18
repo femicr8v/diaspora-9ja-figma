@@ -38,20 +38,58 @@ export async function POST(req: Request) {
     if (event.type === "checkout.session.completed") {
       const session = event.data.object as Stripe.Checkout.Session;
 
-      // Details Stripe just collected for you
-      const details = session.customer_details; // { email, name, phone, address }
+      // Retrieve the full session with line items to get product info
+      const fullSession = await stripe.checkout.sessions.retrieve(session.id, {
+        expand: ["line_items", "line_items.data.price.product"],
+      });
+
+      // Get tier name from the line items
+      let tierName = "Unknown";
+      if (fullSession.line_items?.data?.[0]) {
+        const lineItem = fullSession.line_items.data[0];
+        if (
+          lineItem.price?.product &&
+          typeof lineItem.price.product === "object"
+        ) {
+          // Check if product is not deleted and has a name
+          const product = lineItem.price.product as Stripe.Product;
+          if (!product.deleted && product.name) {
+            tierName = product.name;
+          }
+        }
+      }
+
+      // Get customer details from the full session
+      const customerDetails = fullSession.customer_details;
+
+      // Format location as a readable string
+      let locationString = null;
+      if (customerDetails?.address) {
+        const addr = customerDetails.address;
+        locationString = [
+          addr.line1,
+          addr.line2,
+          addr.city,
+          addr.state,
+          addr.postal_code,
+          addr.country,
+        ]
+          .filter(Boolean)
+          .join(", ");
+      }
 
       const { error } = await supabase.from("payments").insert({
-        stripe_session_id: session.id,
-        user_id: session.metadata?.userId ?? null,
-        email: details?.email ?? null,
-        name: details?.name ?? null,
-        phone: details?.phone ?? null,
-        location: details?.address ? JSON.stringify(details.address) : null,
-        amount_total: session.amount_total ?? null,
-        currency: session.currency ?? null,
+        stripe_session_id: fullSession.id,
+        user_id: fullSession.metadata?.userId ?? null,
+        email: customerDetails?.email ?? null,
+        name: customerDetails?.name ?? null,
+        phone: customerDetails?.phone ?? null,
+        location: locationString,
+        tier_name: tierName,
+        amount_total: fullSession.amount_total ?? null,
+        currency: fullSession.currency ?? null,
         status: "completed",
-        raw: session as any, // keep the full payload for auditing/debugging
+        raw: fullSession as any, // keep the full payload for auditing/debugging
       });
 
       if (error) {
@@ -59,6 +97,12 @@ export async function POST(req: Request) {
         if (!/duplicate key value/.test(error.message)) {
           console.error("Supabase insert error:", error);
         }
+      } else {
+        console.log(
+          `✅ Payment recorded: ${customerDetails?.email} - ${tierName} - $${
+            fullSession.amount_total ? fullSession.amount_total / 100 : 0
+          } ${fullSession.currency?.toUpperCase()}`
+        );
       }
     }
 

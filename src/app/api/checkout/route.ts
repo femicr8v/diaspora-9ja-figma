@@ -11,7 +11,7 @@ export async function POST(req: Request) {
     const { email, userId } = await req.json();
 
     const session = await stripe.checkout.sessions.create({
-      mode: "payment",
+      mode: "subscription",
       payment_method_types: ["card"],
       line_items: [
         {
@@ -23,7 +23,6 @@ export async function POST(req: Request) {
       // Make Stripe collect the info for you
       billing_address_collection: "required", // full billing address required
       phone_number_collection: { enabled: true }, // phone collected & required
-      customer_creation: "always", // create a Customer in Stripe
       customer_email: email || undefined, // prefill if you have it
       // Attach internal reference if you have one
       client_reference_id: userId ?? undefined,
