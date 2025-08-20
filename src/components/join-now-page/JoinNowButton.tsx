@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { Loader2, ArrowLeft } from "lucide-react";
+import { Loader2, UserRoundCheck } from "lucide-react";
 
 export function JoinNowButton({
   user,
@@ -62,8 +62,8 @@ export function JoinNowButton({
           </>
         ) : (
           <>
+            <UserRoundCheck strokeWidth={2} className="w-5 h-5 mr-2" />
             Join Our Community
-            <ArrowLeft className="w-5 h-5 ml-2 rotate-180" />
           </>
         )}
       </Button>

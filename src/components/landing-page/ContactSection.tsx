@@ -1,5 +1,11 @@
 "use client";
 
+import {
+  contactHours,
+  contactMethods,
+  contactFormControls,
+} from "@/lib/constants";
+
 import { useState } from "react";
 import { Badge } from "../ui/badge";
 import { Input } from "../ui/input";
@@ -8,11 +14,6 @@ import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 import { Send, Clock } from "lucide-react";
 import { Card, CardContent } from "../ui/card";
-import {
-  contactHours,
-  contactMethods,
-  contactFormControls,
-} from "@/lib/constants";
 import type { ContactFormData } from "@/lib/type";
 
 export function ContactSection() {
@@ -20,7 +21,7 @@ export function ContactSection() {
     name: "",
     email: "",
     message: "",
-    company: "",
+    location: "",
     phone: "",
   });
 
@@ -32,7 +33,7 @@ export function ContactSection() {
       name: "",
       email: "",
       message: "",
-      company: "",
+      location: "",
       phone: "",
     });
   };
@@ -183,7 +184,7 @@ export function ContactSection() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {contactFormControls
                       .filter((control) =>
-                        ["phone", "company"].includes(control.name)
+                        ["phone", "location"].includes(control.name)
                       )
                       .map((control) => (
                         <div key={control.name} className="space-y-2">

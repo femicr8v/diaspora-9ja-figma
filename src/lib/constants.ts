@@ -450,9 +450,9 @@ export const contactFormControls: ContactFormControls[] = [
     required: false,
   },
   {
-    name: "company",
-    label: "Company",
-    placeholder: "Your company",
+    name: "location",
+    label: "Location",
+    placeholder: "Your location",
     type: "text",
     required: false,
   },

@@ -125,6 +125,25 @@ export async function POST(req: Request) {
             fullSession.amount_total ? fullSession.amount_total / 100 : 0
           } ${fullSession.currency?.toUpperCase()}`
         );
+
+        // Update lead status to converted if email exists
+        if (customerDetails?.email) {
+          try {
+            await supabase
+              .from("leads")
+              .update({
+                status: "converted",
+                converted_at: new Date().toISOString(),
+                stripe_session_id: fullSession.id,
+              })
+              .eq("email", customerDetails.email);
+            console.log(
+              `✅ Lead marked as converted: ${customerDetails.email}`
+            );
+          } catch (leadError) {
+            console.error("❌ Error updating lead status:", leadError);
+          }
+        }
       }
     } else if (event.type === "invoice.payment_succeeded") {
       const invoice = event.data.object as Stripe.Invoice;
