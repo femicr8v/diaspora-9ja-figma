@@ -35,18 +35,30 @@ export async function POST(req: Request) {
   }
 
   try {
+    console.log(`🔔 Webhook received: ${event.type}`);
+
     if (event.type === "checkout.session.completed") {
       const session = event.data.object as Stripe.Checkout.Session;
+      console.log(`📋 Processing session: ${session.id}`);
 
       // Retrieve the full session with line items to get product info
       const fullSession = await stripe.checkout.sessions.retrieve(session.id, {
         expand: ["line_items", "line_items.data.price.product"],
       });
+      console.log(
+        `📦 Retrieved full session with ${
+          fullSession.line_items?.data?.length || 0
+        } line items`
+      );
 
       // Get tier name from the line items
       let tierName = "Unknown";
       if (fullSession.line_items?.data?.[0]) {
         const lineItem = fullSession.line_items.data[0];
+        console.log(
+          `🏷️ Line item price product:`,
+          typeof lineItem.price?.product
+        );
         if (
           lineItem.price?.product &&
           typeof lineItem.price.product === "object"
@@ -55,12 +67,19 @@ export async function POST(req: Request) {
           const product = lineItem.price.product as Stripe.Product;
           if (!product.deleted && product.name) {
             tierName = product.name;
+            console.log(`✅ Tier name found: ${tierName}`);
           }
         }
       }
 
       // Get customer details from the full session
       const customerDetails = fullSession.customer_details;
+      console.log(`👤 Customer details:`, {
+        email: customerDetails?.email,
+        name: customerDetails?.name,
+        phone: customerDetails?.phone,
+        hasAddress: !!customerDetails?.address,
+      });
 
       // Format location as a readable string
       let locationString = null;
@@ -76,8 +95,10 @@ export async function POST(req: Request) {
         ]
           .filter(Boolean)
           .join(", ");
+        console.log(`📍 Location formatted: ${locationString}`);
       }
 
+      console.log(`💾 Attempting to insert payment record...`);
       const { error } = await supabase.from("payments").insert({
         stripe_session_id: fullSession.id,
         user_id: fullSession.metadata?.userId ?? null,
@@ -93,9 +114,10 @@ export async function POST(req: Request) {
       });
 
       if (error) {
+        console.error("❌ Supabase insert error:", error);
         // ignore duplicate insert if Stripe retries
         if (!/duplicate key value/.test(error.message)) {
-          console.error("Supabase insert error:", error);
+          console.error("🚨 Non-duplicate error:", error);
         }
       } else {
         console.log(
@@ -104,11 +126,99 @@ export async function POST(req: Request) {
           } ${fullSession.currency?.toUpperCase()}`
         );
       }
+    } else if (event.type === "invoice.payment_succeeded") {
+      const invoice = event.data.object as Stripe.Invoice;
+      console.log(`💰 Processing invoice payment: ${invoice.id}`);
+
+      // For subscription payments, we need to get the subscription and customer details
+      // Check if this invoice is associated with a subscription
+      if ((invoice as any).subscription && invoice.customer) {
+        try {
+          const subscriptionId =
+            typeof (invoice as any).subscription === "string"
+              ? (invoice as any).subscription
+              : (invoice as any).subscription.id;
+
+          const subscription = await stripe.subscriptions.retrieve(
+            subscriptionId,
+            {
+              expand: ["items.data.price.product", "customer"],
+            }
+          );
+
+          const customer = subscription.customer as Stripe.Customer;
+          console.log(`👤 Customer found: ${customer.email}`);
+
+          // Get tier name from subscription items
+          let tierName = "Unknown";
+          if (subscription.items?.data?.[0]) {
+            const item = subscription.items.data[0];
+            if (item.price?.product && typeof item.price.product === "object") {
+              const product = item.price.product as Stripe.Product;
+              if (!product.deleted && product.name) {
+                tierName = product.name;
+                console.log(`✅ Tier name found: ${tierName}`);
+              }
+            }
+          }
+
+          // Format customer address if available
+          let locationString = null;
+          if (customer.address) {
+            const addr = customer.address;
+            locationString = [
+              addr.line1,
+              addr.line2,
+              addr.city,
+              addr.state,
+              addr.postal_code,
+              addr.country,
+            ]
+              .filter(Boolean)
+              .join(", ");
+            console.log(`📍 Location formatted: ${locationString}`);
+          }
+
+          console.log(`💾 Attempting to insert subscription payment record...`);
+          const { error } = await supabase.from("payments").insert({
+            stripe_session_id: invoice.id, // Use invoice ID for subscriptions
+            user_id: invoice.metadata?.userId ?? null,
+            email: customer.email ?? null,
+            name: customer.name ?? null,
+            phone: customer.phone ?? null,
+            location: locationString,
+            tier_name: tierName,
+            amount_total: invoice.amount_paid ?? null,
+            currency: invoice.currency ?? null,
+            status: "completed",
+            raw: { invoice, subscription } as any,
+          });
+
+          if (error) {
+            console.error("❌ Supabase insert error:", error);
+            if (!/duplicate key value/.test(error.message)) {
+              console.error("🚨 Non-duplicate error:", error);
+            }
+          } else {
+            console.log(
+              `✅ Subscription payment recorded: ${
+                customer.email
+              } - ${tierName} - $${
+                invoice.amount_paid ? invoice.amount_paid / 100 : 0
+              } ${invoice.currency?.toUpperCase()}`
+            );
+          }
+        } catch (err) {
+          console.error("🚨 Error processing subscription payment:", err);
+        }
+      }
+    } else {
+      console.log(`⏭️ Ignoring event type: ${event.type}`);
     }
 
     return NextResponse.json({ received: true });
   } catch (err) {
-    console.error("Webhook handler error:", err);
+    console.error("🚨 Webhook handler error:", err);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
