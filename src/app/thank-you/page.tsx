@@ -250,6 +250,7 @@ export default function ThankYouPage() {
           <div className="mt-10 md:mt-20 flex justify-center items-center">
             <Link
               href="https://discord.com/"
+              target="_blank"
               className={cn(
                 buttonVariants({ variant: "default", size: "lg" }),
                 "h-12 active:bg-primary/90 md:has-[>svg]:px-8 py-3 md:py-5 text-base md:text-xl font-semibold shadow-xl hover:shadow-2xl active:shadow-2xl transform hover:scale-105 active:scale-105 animate-bounce transition-all duration-300 group"
