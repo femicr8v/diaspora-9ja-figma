@@ -174,7 +174,7 @@ export default function ThankYouPage() {
         <header className="border-b-2 border-border/40 bg-background/95 backdrop-blur-sm sticky top-0 z-50">
           <div className="container mx-auto max-w-7xl px-6 py-4 flex items-center justify-center">
             <Link href="/" className="flex items-center space-x-3">
-              <div className="w-10 h-10 flex items-center justify-center">
+              <div className="w-10 h-10 flex items-center justify-center gap-1.5 md:gap-3">
                 <Image
                   src={logoImage}
                   width={40}
@@ -249,7 +249,7 @@ export default function ThankYouPage() {
           {/* Action Button */}
           <div className="mt-10 md:mt-20 flex justify-center items-center">
             <Link
-              href="#"
+              href="https://discord.com/"
               className={cn(
                 buttonVariants({ variant: "default", size: "lg" }),
                 "h-12 active:bg-primary/90 md:has-[>svg]:px-8 py-3 md:py-5 text-base md:text-xl font-semibold shadow-xl hover:shadow-2xl active:shadow-2xl transform hover:scale-105 active:scale-105 animate-bounce transition-all duration-300 group"
