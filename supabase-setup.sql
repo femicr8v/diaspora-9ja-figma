@@ -33,9 +33,12 @@ create table if not exists leads (
   email text not null,
   phone text,
   location text,
-  status text not null default 'lead', -- 'lead', 'converted', 'abandoned'
+  status text not null default 'lead', -- 'lead', 'paid', 'payment_failed', 'abandoned'
   stripe_session_id text, -- will be populated when they start checkout
-  converted_at timestamptz, -- when they completed payment
+  payment_intent_id text, -- Stripe payment intent ID
+  amount_paid numeric(10,2), -- Amount paid in dollars
+  paid_at timestamptz, -- when they completed payment
+  converted_at timestamptz, -- when they completed payment (alias for paid_at)
   unique(email) -- prevent duplicate leads for same email
 );
 

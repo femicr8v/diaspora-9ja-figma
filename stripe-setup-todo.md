@@ -3,28 +3,32 @@
 ## ✅ Completed
 
 - [x] Install Stripe dependency (already in package.json)
+- [x] Set up Stripe API keys in environment variables
+- [x] Create payment intent API endpoint (`/api/create-payment-intent`)
+- [x] Create webhook endpoint for payment confirmation (`/api/webhook`)
+- [x] Set up client-side payment form component
+- [x] Install Stripe React components (`@stripe/stripe-js`, `@stripe/react-stripe-js`)
+- [x] Create test payment page (`/test-payment`)
+- [x] Update Supabase schema for payment tracking
 
 ## 🔄 In Progress
 
-- [ ] Set up Stripe API keys in environment variables
-- [ ] Create payment intent API endpoint
-- [ ] Create webhook endpoint for payment confirmation
-- [ ] Set up client-side payment form
+- [ ] Test with real payment using Stripe test cards
 
 ## 📋 Todo Items
 
 ### 1. Environment Setup
 
-- [ ] Add Stripe publishable key to `.env.local`
-- [ ] Add Stripe secret key to `.env.local`
-- [ ] Add webhook endpoint secret to `.env.local`
+- [x] Add Stripe publishable key to `.env.local`
+- [x] Add Stripe secret key to `.env.local`
+- [x] Add webhook endpoint secret to `.env.local`
 
 ### 2. Payment Flow
 
-- [ ] Create `/api/create-payment-intent` endpoint
-- [ ] Create `/api/webhooks/stripe` endpoint for webhook handling
-- [ ] Build payment form component with Stripe Elements
-- [ ] Integrate payment form with existing lead capture
+- [x] Create `/api/create-payment-intent` endpoint
+- [x] Create `/api/webhook` endpoint for webhook handling
+- [x] Build payment form component with Stripe Elements
+- [x] Integrate payment form with existing lead capture
 
 ### 3. Testing
 
@@ -53,9 +57,9 @@
 
 ### 6. Database Integration
 
-- [ ] Update Supabase schema to include payment records
-- [ ] Link payments to existing leads table
-- [ ] Add payment status tracking
+- [x] Update Supabase schema to include payment records
+- [x] Link payments to existing leads table
+- [x] Add payment status tracking
 - [ ] Create payment history views
 
 ### 7. Security & Compliance

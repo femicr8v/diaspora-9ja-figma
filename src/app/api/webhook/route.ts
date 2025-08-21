@@ -37,7 +37,56 @@ export async function POST(req: Request) {
   try {
     console.log(`🔔 Webhook received: ${event.type}`);
 
-    if (event.type === "checkout.session.completed") {
+    if (event.type === "payment_intent.succeeded") {
+      const paymentIntent = event.data.object as Stripe.PaymentIntent;
+      console.log(`💳 Processing payment intent: ${paymentIntent.id}`);
+
+      const { leadId, email } = paymentIntent.metadata;
+
+      // Update lead status to paid
+      if (leadId) {
+        const { error } = await supabase
+          .from("leads")
+          .update({
+            status: "paid",
+            payment_intent_id: paymentIntent.id,
+            amount_paid: paymentIntent.amount / 100, // Convert from cents
+            paid_at: new Date().toISOString(),
+          })
+          .eq("id", leadId);
+
+        if (error) {
+          console.error("❌ Error updating lead:", error);
+        } else {
+          console.log(
+            `✅ Payment successful for lead ${leadId}: $${
+              paymentIntent.amount / 100
+            }`
+          );
+        }
+      }
+    } else if (event.type === "payment_intent.payment_failed") {
+      const paymentIntent = event.data.object as Stripe.PaymentIntent;
+      console.log(`❌ Processing failed payment intent: ${paymentIntent.id}`);
+
+      const { leadId } = paymentIntent.metadata;
+
+      if (leadId) {
+        const { error } = await supabase
+          .from("leads")
+          .update({
+            status: "payment_failed",
+            payment_intent_id: paymentIntent.id,
+          })
+          .eq("id", leadId);
+
+        if (error) {
+          console.error("❌ Error updating lead for failed payment:", error);
+        } else {
+          console.log(`❌ Payment failed for lead ${leadId}`);
+        }
+      }
+    } else if (event.type === "checkout.session.completed") {
       const session = event.data.object as Stripe.Checkout.Session;
       console.log(`📋 Processing session: ${session.id}`);
 
