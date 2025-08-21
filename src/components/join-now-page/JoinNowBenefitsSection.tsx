@@ -1,8 +1,8 @@
 "use client";
 
-import { CheckCircle, Shield } from "lucide-react";
-import { Card, CardContent } from "../ui/card";
 import { Badge } from "../ui/badge";
+import { Card, CardContent } from "../ui/card";
+import { CheckCircle, Shield } from "lucide-react";
 import { joinNowPageBenefits } from "@/lib/constants";
 
 export function JoinNowBenefitsSection() {
@@ -20,7 +20,7 @@ export function JoinNowBenefitsSection() {
 
             return (
               <Card
-                key={item.title + "w"}
+                key={item.title + "bs"}
                 className="border-border/40 bg-background/80 backdrop-blur-sm hover:border-primary/40 hover:shadow-xl transition-all duration-300 group overflow-hidden"
               >
                 <CardContent className="p-6">

@@ -42,7 +42,7 @@ export function Footer() {
 
                 return (
                   <span
-                    key={icon + "w"}
+                    key={icon + "ti"}
                     className="w-8 md:w-10 h-8 md:h-10 bg-white/10 rounded-lg flex items-center justify-center"
                   >
                     <Icon className="w-4 md:w-5 h-4 md:h-5 text-white" />
@@ -53,14 +53,14 @@ export function Footer() {
           </div>
 
           {footerLinks.map((item) => (
-            <div key={item.title}>
+            <div key={item.title + "fl"}>
               <h4 className="mb-4 md:mb-6 text-white font-headers font-bold text-base">
                 {item.title}
               </h4>
 
               <ul className="space-y-2 md:space-y-3">
                 {item.links.map((link) => (
-                  <li key={link.href}>
+                  <li key={link.href + "l"}>
                     <a
                       href={link.href}
                       className="text-gray-200 hover:text-white transition-colors text-sm md:text-base"
@@ -85,7 +85,7 @@ export function Footer() {
               const Icon = item.icon;
 
               return (
-                <span key={item.label + "w"} className="flex items-center">
+                <span key={item.label + "bi"} className="flex items-center">
                   <Icon className="w-3 md:w-4 h-3 md:h-4 mr-1" />
                   {item.label}
                 </span>

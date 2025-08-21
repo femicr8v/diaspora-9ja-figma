@@ -165,7 +165,10 @@ export function ContactSection() {
                             htmlFor={control.name}
                             className="text-sm font-semibold"
                           >
-                            {control.label}
+                            {control.label}{" "}
+                            {control.required && (
+                              <span className="text-destructive">*</span>
+                            )}
                           </Label>
                           <Input
                             id={control.name}
@@ -192,7 +195,10 @@ export function ContactSection() {
                             htmlFor={control.name}
                             className="text-sm font-semibold"
                           >
-                            {control.label}
+                            {control.label}{" "}
+                            {control.required && (
+                              <span className="text-destructive">*</span>
+                            )}
                           </Label>
                           <Input
                             id={control.name}
@@ -216,7 +222,10 @@ export function ContactSection() {
                           htmlFor={control.name}
                           className="text-sm font-semibold"
                         >
-                          {control.label}
+                          {control.label}{" "}
+                          {control.required && (
+                            <span className="text-destructive">*</span>
+                          )}
                         </Label>
                         <Textarea
                           id={control.name}

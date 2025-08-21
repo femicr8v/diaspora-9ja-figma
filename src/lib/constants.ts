@@ -34,6 +34,7 @@ import type {
   ContactHours,
   ContactFormControls,
   FooterLinks,
+  JoinFormField,
 } from "./type";
 import { countries } from "./countries";
 
@@ -416,7 +417,7 @@ export const contactHours: ContactHours[] = [
 export const contactFormControls: ContactFormControls[] = [
   {
     name: "name",
-    label: "Name *",
+    label: "Name",
     placeholder: "Your name",
     type: "text",
     required: true,
@@ -430,7 +431,7 @@ export const contactFormControls: ContactFormControls[] = [
   },
   {
     name: "email",
-    label: "Email *",
+    label: "Email",
     placeholder: "your@email.com",
     type: "email",
     required: true,
@@ -443,22 +444,23 @@ export const contactFormControls: ContactFormControls[] = [
     },
   },
   {
+    name: "location",
+    label: "Location",
+    placeholder: "Your location",
+    type: "text",
+    required: true,
+  },
+  {
     name: "phone",
     label: "Phone",
     placeholder: "+44 20 1234 5678",
     type: "tel",
     required: false,
   },
-  {
-    name: "location",
-    label: "Location",
-    placeholder: "Your location",
-    type: "text",
-    required: false,
-  },
+
   {
     name: "message",
-    label: "Message *",
+    label: "Message",
     placeholder: "Tell us more about your inquiry...",
     type: "textarea",
     required: true,
@@ -492,5 +494,36 @@ export const footerLinks: FooterLinks[] = [
       { href: "#contact", label: "Contact Us" },
       { href: "#help", label: "Help Center" },
     ],
+  },
+];
+
+export const joinFormFields: JoinFormField[] = [
+  {
+    id: "name",
+    label: "Full Name",
+    placeholder: "Enter your full name",
+    type: "text" as const,
+    required: true,
+  },
+  {
+    id: "email",
+    label: "Email Address",
+    placeholder: "Enter your email",
+    type: "email" as const,
+    required: true,
+  },
+  {
+    id: "phone",
+    label: "Phone Number",
+    placeholder: "Enter your phone number",
+    type: "tel" as const,
+    required: true,
+  },
+  {
+    id: "location",
+    label: "Location",
+    placeholder: "City, Country",
+    type: "text" as const,
+    required: true,
   },
 ];

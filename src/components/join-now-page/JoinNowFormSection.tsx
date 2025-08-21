@@ -1,11 +1,12 @@
 "use client";
 
 import {
-  Shield,
-  Star,
-  CheckCircle,
-  UserRoundCheck,
   Loader2,
+  LucideIcon,
+  UserRoundCheck,
+  Shield,
+  CheckCircle,
+  Star,
 } from "lucide-react";
 
 import { useState } from "react";
@@ -13,6 +14,7 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
+import { joinFormFields } from "@/lib/constants";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 
 interface JoinFormData {
@@ -21,6 +23,17 @@ interface JoinFormData {
   phone: string;
   location: string;
 }
+
+export interface SecurityIcons {
+  icon: LucideIcon;
+  text: string;
+}
+
+const securityIcons: SecurityIcons[] = [
+  { icon: Shield, text: "SSL Secure" },
+  { icon: CheckCircle, text: "No Spam" },
+  { icon: Star, text: "Trusted" },
+];
 
 export function JoinNowFormSection() {
   const [formData, setFormData] = useState<JoinFormData>({
@@ -113,64 +126,48 @@ export function JoinNowFormSection() {
           <form onSubmit={handleJoinCommunity} className="flex flex-col gap-4">
             {/* First row: Name and Email */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="name" className="text-sm font-semibold">
-                  Full Name *
-                </Label>
-                <Input
-                  id="name"
-                  type="text"
-                  placeholder="Enter your full name"
-                  value={formData.name}
-                  onChange={handleInputChange("name")}
-                  className="h-12 bg-muted/50 border border-border focus:border-primary focus:bg-background"
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-semibold">
-                  Email Address *
-                </Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="Enter your email"
-                  value={formData.email}
-                  onChange={handleInputChange("email")}
-                  className="h-12 bg-muted/50 border border-border focus:border-primary focus:bg-background"
-                  required
-                />
-              </div>
+              {joinFormFields.slice(0, 2).map((field) => (
+                <div key={field.id + "ne"} className="space-y-2">
+                  <Label htmlFor={field.id} className="text-sm font-semibold">
+                    {field.label}{" "}
+                    {field.required && (
+                      <span className="text-destructive">*</span>
+                    )}
+                  </Label>
+                  <Input
+                    id={field.id}
+                    type={field.type}
+                    placeholder={field.placeholder}
+                    value={formData[field.id as keyof JoinFormData]}
+                    onChange={handleInputChange(field.id as keyof JoinFormData)}
+                    className="h-12 bg-muted/50 border border-border focus:border-primary focus:bg-background"
+                    required={field.required}
+                  />
+                </div>
+              ))}
             </div>
 
             {/* Second row: Phone and Location */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="phone" className="text-sm font-semibold">
-                  Phone Number
-                </Label>
-                <Input
-                  id="phone"
-                  type="tel"
-                  placeholder="Enter your phone number"
-                  value={formData.phone}
-                  onChange={handleInputChange("phone")}
-                  className="h-12 bg-muted/50 border border-border focus:border-primary focus:bg-background"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="location" className="text-sm font-semibold">
-                  Location
-                </Label>
-                <Input
-                  id="location"
-                  type="text"
-                  placeholder="City, Country"
-                  value={formData.location}
-                  onChange={handleInputChange("location")}
-                  className="h-12 bg-muted/50 border border-border focus:border-primary focus:bg-background"
-                />
-              </div>
+              {joinFormFields.slice(2, 4).map((field) => (
+                <div key={field.id + "pl"} className="space-y-2">
+                  <Label htmlFor={field.id} className="text-sm font-semibold">
+                    {field.label}{" "}
+                    {field.required && (
+                      <span className="text-destructive">*</span>
+                    )}
+                  </Label>
+                  <Input
+                    id={field.id}
+                    type={field.type}
+                    placeholder={field.placeholder}
+                    value={formData[field.id as keyof JoinFormData]}
+                    onChange={handleInputChange(field.id as keyof JoinFormData)}
+                    className="h-12 bg-muted/50 border border-border focus:border-primary focus:bg-background"
+                    required={field.required}
+                  />
+                </div>
+              ))}
             </div>
 
             <Button
@@ -222,18 +219,15 @@ export function JoinNowFormSection() {
             {/* Security Features */}
             <div className="bg-green-50 border border-green-200 rounded-lg p-4">
               <div className="flex items-center justify-center space-x-6 text-sm">
-                <div className="flex items-center text-green-700">
-                  <Shield className="w-4 h-4 mr-2" />
-                  <span className="font-medium">SSL Secure</span>
-                </div>
-                <div className="flex items-center text-green-700">
-                  <CheckCircle className="w-4 h-4 mr-2" />
-                  <span className="font-medium">No Spam</span>
-                </div>
-                <div className="flex items-center text-green-700">
-                  <Star className="w-4 h-4 mr-2" />
-                  <span className="font-medium">Trusted</span>
-                </div>
+                {securityIcons.map((feature, index) => (
+                  <div
+                    key={index + "si"}
+                    className="flex items-center text-green-700"
+                  >
+                    <feature.icon className="w-4 h-4 mr-2" />
+                    <span className="font-medium">{feature.text}</span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

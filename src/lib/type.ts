@@ -166,3 +166,11 @@ export interface FooterLinks {
     label: string;
   }[];
 }
+
+export interface JoinFormField {
+  id: string;
+  label: string;
+  placeholder: string;
+  type: "text" | "email" | "tel";
+  required: boolean;
+}

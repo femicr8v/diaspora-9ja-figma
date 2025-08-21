@@ -30,7 +30,6 @@ export async function POST(req: Request) {
       // Make Stripe collect the info for you
       billing_address_collection: "required", // full billing address required
       phone_number_collection: { enabled: true }, // phone collected & required
-      customer_email: email || undefined, // prefill if you have it
       // Attach internal reference if you have one
       client_reference_id: userId ?? undefined,
       metadata: {
@@ -77,7 +76,11 @@ export async function POST(req: Request) {
       } catch (customerError) {
         console.error("Error handling customer:", customerError);
         // Continue without customer pre-fill if there's an error
+        sessionConfig.customer_email = email;
       }
+    } else if (email) {
+      // If we don't have name but have email, use customer_email
+      sessionConfig.customer_email = email;
     }
 
     const session = await stripe.checkout.sessions.create(sessionConfig);

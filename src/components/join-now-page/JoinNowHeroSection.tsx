@@ -35,9 +35,10 @@ export function JoinNowHeroSection() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
           {trustIndicators.map((indicator, index) => {
             const Icon = indicator.icon;
+
             return (
               <div
-                key={index}
+                key={index + "hs"}
                 className={`text-center ${
                   index % 2 === 0 ? "text-primary" : "text-accent"
                 }`}

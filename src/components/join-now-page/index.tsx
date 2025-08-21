@@ -2,11 +2,11 @@
 
 import { Badge } from "../ui/badge";
 import { JoinNowHeader } from "./JoinNowHeader";
-import { JoinNowBottomCTA } from "./JoinNowBottomCTA";
+import { Footer } from "../landing-page/Footer";
+// import { JoinNowBottomCTA } from "./JoinNowBottomCTA";
 import { JoinNowHeroSection } from "./JoinNowHeroSection";
 import { JoinNowFormSection } from "./JoinNowFormSection";
 import { JoinNowBenefitsSection } from "./JoinNowBenefitsSection";
-import { Footer } from "../landing-page/Footer";
 
 export function JoinNowPage() {
   return (
