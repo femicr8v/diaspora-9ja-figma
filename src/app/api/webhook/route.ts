@@ -148,7 +148,7 @@ export async function POST(req: Request) {
       }
 
       console.log(`💾 Attempting to insert payment record...`);
-      const { error } = await supabase.from("payments").insert({
+      const { error } = await supabase.from("clients").insert({
         stripe_session_id: fullSession.id,
         user_id: fullSession.metadata?.userId ?? null,
         email: customerDetails?.email ?? null,
@@ -248,7 +248,7 @@ export async function POST(req: Request) {
           }
 
           console.log(`💾 Attempting to insert subscription payment record...`);
-          const { error } = await supabase.from("payments").insert({
+          const { error } = await supabase.from("clients").insert({
             stripe_session_id: invoice.id, // Use invoice ID for subscriptions
             user_id: invoice.metadata?.userId ?? null,
             email: customer.email ?? null,

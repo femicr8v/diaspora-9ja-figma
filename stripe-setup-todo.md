@@ -58,7 +58,7 @@
 ### 6. Database Integration
 
 - [x] Update Supabase schema to include payment records
-- [x] Link payments to existing leads table
+- [x] Link clients to existing leads table
 - [x] Add payment status tracking
 - [ ] Create payment history views
 

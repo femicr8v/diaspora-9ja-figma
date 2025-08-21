@@ -1,6 +1,6 @@
--- Run this in your Supabase SQL editor to create the payments table
+-- Run this in your Supabase SQL editor to create the clients table
 
-create table if not exists payments (
+create table if not exists clients (
   id bigint generated always as identity primary key,
   created_at timestamptz not null default now(),
   stripe_session_id text unique,
@@ -15,13 +15,13 @@ create table if not exists payments (
   raw jsonb
 );
 
-create index if not exists payments_email_idx on payments (email);
+create index if not exists clients_email_idx on clients (email);
 
 -- Enable Row Level Security (RLS)
-alter table payments enable row level security;
+alter table clients enable row level security;
 
 -- Create a policy that allows service role to do everything
-create policy "Service role can manage payments" on payments
+create policy "Service role can manage clients" on clients
   for all using (auth.role() = 'service_role');
 
 -- Create leads table to track users who started the join process

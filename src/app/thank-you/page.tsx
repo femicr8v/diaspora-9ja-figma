@@ -9,6 +9,8 @@ import {
   Sparkles,
   Users,
   TrendingUp,
+  AlertCircle,
+  Loader2,
 } from "lucide-react";
 
 import Link from "next/link";
@@ -18,26 +20,125 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { logoImage, logoText } from "@/lib/constants";
 import { Card, CardContent } from "@/components/ui/card";
+import { useRouter, useSearchParams } from "next/navigation";
 
-interface ThankYouPageProps {
-  userName: string;
-  onGoToDashboard: () => void;
-  onReturnHome: () => void;
+interface PaymentData {
+  id: string;
+  email: string;
+  name: string;
+  tier_name: string;
+  amount_total: number;
+  currency: string;
+  created_at: string;
 }
 
-export default function ThankYouPage({
-  userName,
-  onGoToDashboard,
-  onReturnHome,
-}: ThankYouPageProps) {
+export default function ThankYouPage() {
   const [showConfetti, setShowConfetti] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(true);
+  const [paymentVerified, setPaymentVerified] = useState(false);
+  const [paymentData, setPaymentData] = useState<PaymentData | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
-    // Trigger confetti animation
-    setShowConfetti(true);
-    const timer = setTimeout(() => setShowConfetti(false), 3000);
-    return () => clearTimeout(timer);
-  }, []);
+    const verifyPayment = async () => {
+      const sessionId = searchParams.get("session_id");
+      const email = searchParams.get("email");
+
+      if (!sessionId && !email) {
+        setError(
+          "Missing payment information. Please check your payment confirmation email."
+        );
+        setIsVerifying(false);
+        return;
+      }
+
+      try {
+        const params = new URLSearchParams();
+        if (sessionId) params.append("session_id", sessionId);
+        if (email) params.append("email", email);
+
+        const response = await fetch(`/api/verify-payment?${params}`);
+        const data = await response.json();
+
+        if (data.verified) {
+          setPaymentVerified(true);
+          setPaymentData(data.payment);
+          // Trigger confetti animation
+          setShowConfetti(true);
+          const timer = setTimeout(() => setShowConfetti(false), 3000);
+          return () => clearTimeout(timer);
+        } else {
+          setError(
+            "Payment not found or not completed. Please contact support if you believe this is an error."
+          );
+        }
+      } catch (err) {
+        console.error("Payment verification failed:", err);
+        setError(
+          "Failed to verify payment. Please try again or contact support."
+        );
+      } finally {
+        setIsVerifying(false);
+      }
+    };
+
+    verifyPayment();
+  }, [searchParams]);
+
+  // Show loading state while verifying
+  if (isVerifying) {
+    return (
+      <section className="min-h-screen bg-gradient-to-br from-green-50 via-background to-accent/10 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 animate-spin text-primary mx-auto mb-4" />
+          <h2 className="text-xl font-semibold text-foreground mb-2">
+            Verifying your payment...
+          </h2>
+          <p className="text-muted-foreground">
+            Please wait while we confirm your transaction.
+          </p>
+        </div>
+      </section>
+    );
+  }
+
+  // Show error state if payment not verified
+  if (!paymentVerified || error) {
+    return (
+      <section className="min-h-screen bg-gradient-to-br from-red-50 via-background to-accent/10 flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto px-6">
+          <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <AlertCircle className="w-12 h-12 text-red-600" />
+          </div>
+          <h1 className="text-2xl font-bold text-foreground mb-4">
+            Access Denied
+          </h1>
+          <p className="text-muted-foreground mb-6">
+            {error || "You need to complete your payment to access this page."}
+          </p>
+          <div className="space-y-3">
+            <Button
+              onClick={() => router.push("/join-the-community")}
+              className="w-full"
+            >
+              Complete Payment
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => router.push("/")}
+              className="w-full"
+            >
+              <Home className="w-4 h-4 mr-2" />
+              Return Home
+            </Button>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   const welcomeBenefits = [
     {
@@ -131,7 +232,7 @@ export default function ThankYouPage({
           </Badge>
 
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold gradient-text leading-tight mb-6">
-            Your payment was successful, {userName}!
+            Your payment was successful, {paymentData?.name || "valued member"}!
           </h1>
 
           <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed mb-8 max-w-3xl mx-auto">
@@ -221,7 +322,7 @@ export default function ThankYouPage({
         <div className="flex flex-col md:flex-row gap-6 justify-center items-center">
           <Button
             size="lg"
-            onClick={onGoToDashboard}
+            onClick={() => router.push("/dashboard")}
             className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 text-lg font-semibold shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 min-w-[200px]"
           >
             <User className="w-5 h-5 mr-2" />
@@ -232,7 +333,7 @@ export default function ThankYouPage({
           <Button
             variant="outline"
             size="lg"
-            onClick={onReturnHome}
+            onClick={() => router.push("/")}
             className="border-2 border-border hover:border-primary/30 text-muted-foreground hover:text-primary px-8 py-4 text-lg font-semibold min-w-[200px]"
           >
             <Home className="w-5 h-5 mr-2" />

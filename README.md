@@ -93,7 +93,7 @@ A comprehensive community platform built with Next.js, designed to connect Niger
 - **Payment Plans Available**:
   - Eco Membership (Early Bird): $10/month
   - Eco Membership Plan: $20/month
-- **Database Schema** with `payments` and `leads` tables
+- **Database Schema** with `clients` and `leads` tables
 - **Lead Capture System** (`/api/leads`) for pre-signup data collection
 
 #### **UI/UX Components**
@@ -188,11 +188,11 @@ Visit `http://localhost:3000` to see the application.
 1. Navigate to `/join-the-community`
 2. Enter email and click "Join Our Community"
 3. Complete Stripe checkout with test card: `4242424242424242`
-4. Verify data storage in Supabase `payments` table
+4. Verify data storage in Supabase `clients` table
 
 ## 📊 Database Schema
 
-### Payments Table
+### Clients Table
 
 Stores completed payment information from Stripe webhooks:
 

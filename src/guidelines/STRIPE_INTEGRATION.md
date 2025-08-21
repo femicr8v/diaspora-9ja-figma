@@ -18,7 +18,7 @@
 
 ### 3. **Database Setup Complete**
 
-- ✅ Supabase `payments` table created with all required columns:
+- ✅ Supabase `clients` table created with all required columns:
   - `id`, `created_at`, `stripe_session_id`, `user_id`
   - `email`, `name`, `phone`, `location`, `tier_name`
   - `amount_total`, `currency`, `status`, `raw`
@@ -95,7 +95,7 @@ Create `/app/thank-you/page.tsx` to show success message after payment.
 ### **Data Collection & Storage:**
 
 ```sql
--- Example of data stored in payments table
+-- Example of data stored in clients table
 SELECT
   email,           -- 'user@example.com'
   name,            -- 'John Doe'
@@ -105,7 +105,7 @@ SELECT
   amount_total/100 as amount_usd, -- 10.00
   currency,        -- 'usd'
   created_at
-FROM payments
+FROM clients
 ORDER BY created_at DESC;
 ```
 
@@ -172,8 +172,8 @@ Declined: 4000000000000002
 ### **Database Schema:**
 
 ```sql
--- payments table structure
-CREATE TABLE payments (
+-- clients table structure
+CREATE TABLE clients (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   stripe_session_id TEXT UNIQUE,

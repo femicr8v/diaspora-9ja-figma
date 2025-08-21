@@ -40,7 +40,7 @@ SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhY
 Run this in Supabase SQL editor:
 
 ```sql
-create table if not exists payments (
+create table if not exists clients (
   id bigint generated always as identity primary key,
   created_at timestamptz not null default now(),
   stripe_session_id text unique,
@@ -55,7 +55,7 @@ create table if not exists payments (
   raw jsonb
 );
 
-create index if not exists payments_email_idx on payments (email);
+create index if not exists clients_email_idx on clients (email);
 ```
 
 ---
@@ -218,7 +218,7 @@ export async function POST(req: Request) {
       // Details Stripe just collected for you
       const details = session.customer_details; // { email, name, phone, address }
 
-      const { error } = await supabase.from("payments").insert({
+      const { error } = await supabase.from("clients").insert({
         stripe_session_id: session.id,
         user_id: session.metadata?.userId ?? null,
         email: details?.email ?? null,
