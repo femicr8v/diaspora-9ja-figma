@@ -102,7 +102,7 @@ export const communityStats: CommunityStat[] = [
     trend: "+12%",
   },
   {
-    label: "Total readers",
+    label: "Active members",
     value: "15.2k",
     icon: Users,
     trend: "+24%",
@@ -114,7 +114,7 @@ export const communityStats: CommunityStat[] = [
     trend: "+18%",
   },
   {
-    label: "Total Contributors",
+    label: "Total contributors",
     value: "47",
     icon: MessageCircle,
     trend: "+8%",

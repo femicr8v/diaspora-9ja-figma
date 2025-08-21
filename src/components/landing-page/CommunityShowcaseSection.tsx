@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { ArrowRight } from "lucide-react";
 import { buttonVariants } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
-import { Globe, Briefcase, Heart, ArrowRight } from "lucide-react";
 import { communityShowcase } from "@/lib/constants";
 
 export function CommunityShowcaseSection() {

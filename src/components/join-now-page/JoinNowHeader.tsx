@@ -11,8 +11,8 @@ export function JoinNowHeader() {
   return (
     <header className="border-b-2 border-border/40 bg-background/95 backdrop-blur-sm sticky top-0 z-50">
       <div className="container mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="flex items-center space-x-3">
-          <div className="w-10 h-10 flex items-center justify-center">
+        <Link href="/" className="max-md:pl-10">
+          <div className="w-10 h-10 flex items-center justify-center gap-1.5 md:gap-3">
             <Image
               src={logoImage}
               width={40}
@@ -30,7 +30,7 @@ export function JoinNowHeader() {
           href="/"
           className={cn(
             buttonVariants({ variant: "ghost", size: "default" }),
-            `hover:bg-accent text-muted-foreground hover:text-white text-base font-medium flex`
+            `flex text-muted-foreground hover:bg-accent hover:text-white active:bg-accent active:text-white text-base font-medium`
           )}
         >
           <ArrowLeft className="size-4" />

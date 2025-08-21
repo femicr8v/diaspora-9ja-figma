@@ -10,8 +10,8 @@ export function HomepageHeader() {
   return (
     <header className="border-b-2 border-border/40 bg-background/95 backdrop-blur-sm sticky top-0 z-50">
       <div className="container mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="flex items-center space-x-3">
-          <div className="w-10 h-10 flex items-center justify-center">
+        <Link href="/" className="max-md:pl-10">
+          <div className="w-10 h-10 flex items-center justify-center gap-1.5 md:gap-3">
             <Image
               src={logoImage}
               width={40}
@@ -41,7 +41,7 @@ export function HomepageHeader() {
             href="/join-the-community"
             className={cn(
               buttonVariants({ variant: "default", size: "default" }),
-              `bg-primary hover:bg-primary/90 text-primary-foreground text-base font-semibold animate-pulse-glow flex`
+              `bg-primary hover:bg-primary/90 active:bg-primary/90 text-primary-foreground text-base font-semibold animate-pulse-glow`
             )}
           >
             Join Now

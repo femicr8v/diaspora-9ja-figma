@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { footerLinks, logoImage, logoText } from "@/lib/constants";
 import { Globe, Users, Heart, Shield } from "lucide-react";
+import { footerLinks, logoImage, logoText } from "@/lib/constants";
 
 const topIcons = [Globe, Users, Heart];
 
@@ -74,7 +74,7 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="pt-6 md:pt-8 border-t border-white/20 flex flex-col md:flex-row justify-between items-center">
+        <div className="pt-6 md:pt-8 border-t border-white/20 flex flex-col md:flex-row justify-between md:items-center">
           <p className="text-gray-200 mb-4 md:mb-0 text-sm md:text-base">
             &copy; 2025 Diaspora 9ja. All rights reserved. Built with ❤️ for the
             global Nigerian community.

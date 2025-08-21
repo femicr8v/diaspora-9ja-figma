@@ -39,7 +39,7 @@ export function HeroSection() {
             href="/join-the-community"
             className={cn(
               buttonVariants({ variant: "default", size: "lg" }),
-              "bg-primary hover:bg-primary/90 active:bg-primary/90 text-primary-foreground px-8 md:px-10 py-3 md:py-5 text-base md:text-lg font-semibold shadow-xl hover:shadow-2xl active:shadow-2xl transform hover:scale-105 active:scale-105 transition-all duration-300 group"
+              "active:bg-primary/90 px-8 md:px-10 py-3 md:py-5 text-base md:text-lg font-semibold shadow-xl hover:shadow-2xl active:shadow-2xl transform hover:scale-105 active:scale-105 transition-all duration-300 group"
             )}
           >
             Start Your Journey

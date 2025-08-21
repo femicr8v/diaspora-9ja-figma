@@ -132,7 +132,7 @@ export function CommunityStatsSection() {
 
             return (
               <Card
-                key={index}
+                key={index + "cs"}
                 className="border-border/40 bg-background/80 text-center hover:border-primary/20 hover:shadow-xl active:shadow-xl transition-all duration-300 group text-primary"
               >
                 <CardContent className="p-2 md:p-8 max-md:[&:last-child]:pb-2">

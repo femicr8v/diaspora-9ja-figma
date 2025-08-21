@@ -1,8 +1,8 @@
 "use client";
 
+import { Footer } from "../Footer";
 import { Badge } from "../ui/badge";
 import { JoinNowHeader } from "./JoinNowHeader";
-import { Footer } from "../landing-page/Footer";
 // import { JoinNowBottomCTA } from "./JoinNowBottomCTA";
 import { JoinNowHeroSection } from "./JoinNowHeroSection";
 import { JoinNowFormSection } from "./JoinNowFormSection";
