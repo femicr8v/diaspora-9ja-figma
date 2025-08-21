@@ -41,7 +41,7 @@ export async function POST(req: Request) {
       const paymentIntent = event.data.object as Stripe.PaymentIntent;
       console.log(`💳 Processing payment intent: ${paymentIntent.id}`);
 
-      const { leadId, email } = paymentIntent.metadata;
+      const { leadId } = paymentIntent.metadata;
 
       // Update lead status to paid
       if (leadId) {
