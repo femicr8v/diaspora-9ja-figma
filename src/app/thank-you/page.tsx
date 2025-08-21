@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import { logoImage, logoText } from "@/lib/constants";
 import { Card, CardContent } from "@/components/ui/card";
 import { useRouter, useSearchParams } from "next/navigation";
+import { ConfettiFireworks } from "@/components/ui/confetti-fireworks";
 
 interface PaymentData {
   id: string;
@@ -68,7 +69,7 @@ export default function ThankYouPage() {
           setPaymentData(data.payment);
           // Trigger confetti animation
           setShowConfetti(true);
-          const timer = setTimeout(() => setShowConfetti(false), 3000);
+          const timer = setTimeout(() => setShowConfetti(false), 5000);
           return () => clearTimeout(timer);
         } else {
           setError(
@@ -160,39 +161,8 @@ export default function ThankYouPage() {
 
   return (
     <section className="min-h-screen bg-gradient-to-br from-green-50 via-background to-accent/10 relative overflow-hidden">
-      {/* Confetti Animation Placeholder */}
-      {showConfetti && (
-        <div className="fixed inset-0 pointer-events-none z-10">
-          <div className="absolute inset-0">
-            {/* Animated confetti elements */}
-            {[...Array(50)].map((_, i) => (
-              <div
-                key={i}
-                className="absolute w-2 h-2 bg-accent rounded-full animate-bounce"
-                style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                  animationDelay: `${Math.random() * 2}s`,
-                  animationDuration: `${2 + Math.random() * 3}s`,
-                }}
-              />
-            ))}
-            {[...Array(30)].map((_, i) => (
-              <div
-                key={`confetti-${i}`}
-                className="absolute w-1 h-4 bg-primary rounded-full animate-bounce"
-                style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                  animationDelay: `${Math.random() * 2}s`,
-                  animationDuration: `${1.5 + Math.random() * 2}s`,
-                  transform: `rotate(${Math.random() * 360}deg)`,
-                }}
-              />
-            ))}
-          </div>
-        </div>
-      )}
+      {/* Confetti Fireworks Component */}
+      <ConfettiFireworks trigger={showConfetti} duration={5000} />
 
       <header className="border-b-2 border-border/40 bg-background/95 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto max-w-7xl px-6 py-4 flex items-center justify-center">

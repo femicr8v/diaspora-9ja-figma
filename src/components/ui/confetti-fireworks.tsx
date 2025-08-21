@@ -1,11 +1,20 @@
 "use client";
 
 import confetti from "canvas-confetti";
-import { Button } from "@/components/ui/button";
+import { useEffect } from "react";
 
-export function ConfettiFireworks() {
-  const handleClick = () => {
-    const duration = 5 * 1000;
+interface ConfettiFireworksProps {
+  trigger?: boolean;
+  duration?: number;
+}
+
+export function ConfettiFireworks({
+  trigger = false,
+  duration = 5000,
+}: ConfettiFireworksProps) {
+  useEffect(() => {
+    if (!trigger) return;
+
     const animationEnd = Date.now() + duration;
     const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
 
@@ -31,11 +40,9 @@ export function ConfettiFireworks() {
         origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
       });
     }, 250);
-  };
 
-  return (
-    <div className="relative">
-      <Button onClick={handleClick}>Trigger Fireworks</Button>
-    </div>
-  );
+    return () => clearInterval(interval);
+  }, [trigger, duration]);
+
+  return null; // This component doesn't render anything visible
 }
