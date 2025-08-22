@@ -38,8 +38,12 @@ import type {
 } from "./type";
 import { countries } from "./countries";
 
-export const logoImage: string = "/logo.png";
 export const logoText: string = "Diaspo9ja";
+export const logoImage: string = "/logo.png";
+
+export const suppotMail: string = "femicr8v@gmail.com";
+export const suppotTellephone: string = "+442079460958";
+
 export const promoImage: string = "/api/placeholder/600/400";
 export const communityGridImage: string = "/api/placeholder/800/600";
 
@@ -390,14 +394,14 @@ export const contactMethods: ContactMethod[] = [
     title: "Email Us",
     value: "hello@diaspora9ja.com",
     description: "For general inquiries and support",
-    action: "mailto:hello@diaspora9ja.com",
+    action: "mailto:" + suppotMail,
   },
   {
     icon: Phone,
     title: "Call Us",
     value: "+44 20 7946 0958",
     description: "Business hours: 9 AM - 6 PM GMT",
-    action: "tel:+442079460958",
+    action: "tel:" + suppotTellephone,
   },
   {
     icon: MessageSquare,

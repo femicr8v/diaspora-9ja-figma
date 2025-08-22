@@ -6,17 +6,19 @@ import {
   contactFormControls,
 } from "@/lib/constants";
 
+import { toast } from "sonner";
 import { useState } from "react";
 import { Badge } from "../ui/badge";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
-import { Send, Clock } from "lucide-react";
+import { Send, Clock, Loader2 } from "lucide-react";
 import { Card, CardContent } from "../ui/card";
 import type { ContactFormData } from "@/lib/type";
 
 export function ContactSection() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [contactForm, setContactForm] = useState<ContactFormData>({
     name: "",
     email: "",
@@ -25,17 +27,42 @@ export function ContactSection() {
     phone: "",
   });
 
-  const handleContactSubmit = (e: React.FormEvent) => {
+  const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Contact form submitted:", contactForm);
-    alert("Thank you for your message! We'll get back to you within 24 hours.");
-    setContactForm({
-      name: "",
-      email: "",
-      message: "",
-      location: "",
-      phone: "",
-    });
+    setIsSubmitting(true);
+
+    try {
+      const form = e.target as HTMLFormElement;
+      const response = await fetch(form.action, {
+        method: form.method,
+        body: new FormData(form),
+        headers: {
+          Accept: "application/json",
+        },
+      });
+
+      if (response.ok) {
+        setContactForm({
+          name: "",
+          email: "",
+          message: "",
+          location: "",
+          phone: "",
+        });
+        toast.success("Message sent successfully!", {
+          description: "We'll get back to you within 24 hours.",
+        });
+      } else {
+        throw new Error("Form submission failed");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast.error("Failed to send message", {
+        description: "Please try again or contact us directly.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleContactInputChange =
@@ -85,7 +112,7 @@ export function ContactSection() {
 
                 return (
                   <Card
-                    key={index}
+                    key={index + "cm"}
                     className="border-border/40 hover:border-primary/30 transition-all duration-300 group bg-background/80 backdrop-blur-sm"
                   >
                     <CardContent className="p-6">
@@ -150,6 +177,8 @@ export function ContactSection() {
                 </div>
 
                 <form
+                  action="https://formspree.io/f/xnnzedwj"
+                  method="POST"
                   onSubmit={handleContactSubmit}
                   className="flex flex-col gap-4"
                 >
@@ -172,6 +201,7 @@ export function ContactSection() {
                           </Label>
                           <Input
                             id={control.name}
+                            name={control.name}
                             type={control.type}
                             placeholder={control.placeholder}
                             value={contactForm[control.name]}
@@ -202,6 +232,7 @@ export function ContactSection() {
                           </Label>
                           <Input
                             id={control.name}
+                            name={control.name}
                             type={control.type}
                             placeholder={control.placeholder}
                             value={contactForm[control.name]}
@@ -229,6 +260,7 @@ export function ContactSection() {
                         </Label>
                         <Textarea
                           id={control.name}
+                          name={control.name}
                           placeholder={control.placeholder}
                           rows={control.rows || 4}
                           value={contactForm[control.name]}
@@ -241,10 +273,15 @@ export function ContactSection() {
 
                   <Button
                     type="submit"
+                    disabled={isSubmitting}
                     className="w-full h-14 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                   >
-                    <Send className="w-5 h-5 mr-2" />
-                    Send Message
+                    {isSubmitting ? (
+                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                    ) : (
+                      <Send className="w-5 h-5 mr-2" />
+                    )}
+                    {isSubmitting ? "Sending..." : "Send Message"}
                   </Button>
                 </form>
 

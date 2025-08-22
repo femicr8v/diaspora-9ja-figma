@@ -16,10 +16,10 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { logoImage, logoText } from "@/lib/constants";
 import { Card, CardContent } from "@/components/ui/card";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { logoImage, logoText, suppotMail } from "@/lib/constants";
 import { ConfettiFireworks } from "@/components/ui/confetti-fireworks";
 
 interface PaymentData {
@@ -277,7 +277,7 @@ export default function ThankYouPage() {
 
           <div className="mt-6 md:mt-10 ">
             <Link
-              href="mailto:support@diaspora9ja.com"
+              href={`mailto:${suppotMail}`}
               className={cn(
                 buttonVariants({ variant: "outline", size: "default" }),
                 "px-6 py-2 border-white bg-transparent text-white text-sm hover:text-primary hover:bg-white hover:font-medium active:text-primary active:bg-white active:font-medium font-normal rounded-full duration-300"

@@ -1,5 +1,6 @@
-import type { Metadata } from "next";
 import { Space_Grotesk, Roboto } from "next/font/google";
+import type { Metadata } from "next";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -22,7 +23,6 @@ export const metadata: Metadata = {
   },
 };
 
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -34,6 +34,7 @@ export default function RootLayout({
         className={`${spaceGrotesk.variable} ${roboto.className} antialiased`}
       >
         {children}
+        <Toaster />
       </body>
     </html>
   );
