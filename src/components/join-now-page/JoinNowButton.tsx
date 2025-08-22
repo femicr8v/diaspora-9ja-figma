@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Loader2, UserRoundCheck } from "lucide-react";
@@ -29,12 +30,12 @@ export function JoinNowButton({
       if (data.url) {
         window.location.href = data.url;
       } else {
-        alert(data.error ?? "Something went wrong");
+        toast.error(data.error ?? "Something went wrong");
         setIsLoading(false);
       }
     } catch (error) {
       console.error("Checkout error:", error);
-      alert("Something went wrong");
+      toast.error("Something went wrong");
       setIsLoading(false);
     }
   };

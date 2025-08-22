@@ -9,6 +9,7 @@ import {
   Star,
 } from "lucide-react";
 
+import { toast } from "sonner";
 import { useState } from "react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -54,7 +55,9 @@ export function JoinNowFormSection() {
 
     // Validate required fields
     if (!formData.name || !formData.email) {
-      alert("Please fill in your name and email address.");
+      toast.error("Name and Email is required", {
+        description: "Please fill in your name and email address.",
+      });
       return;
     }
 
@@ -89,12 +92,12 @@ export function JoinNowFormSection() {
       if (checkoutData.url) {
         window.location.href = checkoutData.url;
       } else {
-        alert(checkoutData.error ?? "Something went wrong");
+        toast.error(checkoutData.error ?? "Something went wrong");
         setIsLoading(false);
       }
     } catch (error) {
       console.error("Join community error:", error);
-      alert("Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again.");
       setIsLoading(false);
     }
   };
