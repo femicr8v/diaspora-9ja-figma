@@ -1,10 +1,8 @@
+import { emailService, PaymentNotificationData } from "@/lib/email-service";
+
 import Stripe from "stripe";
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import {
-  emailService,
-  PaymentNotificationData,
-} from "../../../lib/email-service";
 
 export const runtime = "nodejs";
 
@@ -246,7 +244,7 @@ export async function POST(req: Request) {
           console.error("❌ Error updating lead:", error);
         } else {
           console.log(
-            `✅ Payment successful for lead ${leadId}: $${
+            `✅ Payment successful for lead ${leadId}: ${
               paymentIntent.amount / 100
             }`
           );
@@ -335,29 +333,40 @@ export async function POST(req: Request) {
       }
 
       console.log(`💾 Attempting to insert payment record...`);
-      const { error } = await supabase.from("clients").insert({
-        stripe_session_id: fullSession.id,
-        user_id: fullSession.metadata?.userId ?? null,
-        email: customerDetails?.email ?? null,
-        name: customerDetails?.name ?? null,
-        phone: customerDetails?.phone ?? null,
-        location: locationString,
-        tier_name: tierName,
-        amount_total: fullSession.amount_total ?? null,
-        currency: fullSession.currency ?? null,
-        status: "completed",
-        raw: fullSession as any, // keep the full payload for auditing/debugging
-      });
+
+      // Use safe insert function to prevent duplicates and handle lead conversion
+      const { data: insertResult, error } = await supabase.rpc(
+        "safe_insert_client",
+        {
+          p_stripe_session_id: fullSession.id,
+          p_user_id: fullSession.metadata?.userId ?? null,
+          p_email: customerDetails?.email ?? null,
+          p_name: customerDetails?.name ?? null,
+          p_phone: customerDetails?.phone ?? null,
+          p_location: locationString,
+          p_tier_name: tierName,
+          p_amount_total: fullSession.amount_total ?? null,
+          p_currency: fullSession.currency ?? null,
+          p_status: "completed",
+          p_raw: fullSession as any,
+        }
+      );
 
       if (error) {
         console.error("❌ Supabase insert error:", error);
-        // ignore duplicate insert if Stripe retries
-        if (!/duplicate key value/.test(error.message)) {
-          console.error("🚨 Non-duplicate error:", error);
+        // Check if it's a duplicate prevention (not an actual error)
+        if (error.message?.includes("Client already exists")) {
+          console.log(
+            `⚠️ Duplicate payment prevented for: ${customerDetails?.email}`
+          );
+        } else {
+          console.error("🚨 Unexpected error:", error);
         }
-      } else {
+      } else if (insertResult) {
         console.log(
-          `✅ Payment recorded: ${customerDetails?.email} - ${tierName} - $${
+          `✅ Payment recorded and lead converted: ${
+            customerDetails?.email
+          } - ${tierName} - ${
             fullSession.amount_total ? fullSession.amount_total / 100 : 0
           } ${fullSession.currency?.toUpperCase()}`
         );
@@ -405,25 +414,6 @@ export async function POST(req: Request) {
               },
             }
           );
-        }
-
-        // Update lead status to converted if email exists
-        if (customerDetails?.email) {
-          try {
-            await supabase
-              .from("leads")
-              .update({
-                status: "converted",
-                converted_at: new Date().toISOString(),
-                stripe_session_id: fullSession.id,
-              })
-              .eq("email", customerDetails.email);
-            console.log(
-              `✅ Lead marked as converted: ${customerDetails.email}`
-            );
-          } catch (leadError) {
-            console.error("❌ Error updating lead status:", leadError);
-          }
         }
       }
     } else if (event.type === "invoice.payment_succeeded") {
@@ -480,30 +470,39 @@ export async function POST(req: Request) {
           }
 
           console.log(`💾 Attempting to insert subscription payment record...`);
-          const { error } = await supabase.from("clients").insert({
-            stripe_session_id: invoice.id, // Use invoice ID for subscriptions
-            user_id: invoice.metadata?.userId ?? null,
-            email: customer.email ?? null,
-            name: customer.name ?? null,
-            phone: customer.phone ?? null,
-            location: locationString,
-            tier_name: tierName,
-            amount_total: invoice.amount_paid ?? null,
-            currency: invoice.currency ?? null,
-            status: "completed",
-            raw: { invoice, subscription } as any,
-          });
+
+          // Use safe insert function for subscription payments too
+          const { data: insertResult, error } = await supabase.rpc(
+            "safe_insert_client",
+            {
+              p_stripe_session_id: invoice.id, // Use invoice ID for subscriptions
+              p_user_id: invoice.metadata?.userId ?? null,
+              p_email: customer.email ?? null,
+              p_name: customer.name ?? null,
+              p_phone: customer.phone ?? null,
+              p_location: locationString,
+              p_tier_name: tierName,
+              p_amount_total: invoice.amount_paid ?? null,
+              p_currency: invoice.currency ?? null,
+              p_status: "completed",
+              p_raw: { invoice, subscription } as any,
+            }
+          );
 
           if (error) {
             console.error("❌ Supabase insert error:", error);
-            if (!/duplicate key value/.test(error.message)) {
-              console.error("🚨 Non-duplicate error:", error);
+            if (error.message?.includes("Client already exists")) {
+              console.log(
+                `⚠️ Duplicate subscription payment prevented for: ${customer.email}`
+              );
+            } else {
+              console.error("🚨 Unexpected subscription error:", error);
             }
-          } else {
+          } else if (insertResult) {
             console.log(
               `✅ Subscription payment recorded: ${
                 customer.email
-              } - ${tierName} - $${
+              } - ${tierName} - ${
                 invoice.amount_paid ? invoice.amount_paid / 100 : 0
               } ${invoice.currency?.toUpperCase()}`
             );
