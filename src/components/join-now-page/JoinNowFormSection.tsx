@@ -17,6 +17,7 @@ import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
 import { joinFormFields } from "@/lib/constants";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
+import { CheckoutResponse, ERROR_TYPES } from "@/lib/error-types";
 
 interface JoinFormData {
   name: string;
@@ -44,14 +45,39 @@ export function JoinNowFormSection() {
     location: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const [errorField, setErrorField] = useState<string | null>(null);
+  const [lastErrorType, setLastErrorType] = useState<string | null>(null);
 
   const handleInputChange =
     (field: keyof JoinFormData) => (e: React.ChangeEvent<HTMLInputElement>) => {
       setFormData({ ...formData, [field]: e.target.value });
+
+      // Clear error state when user modifies any field after an error
+      // This ensures form remains accessible and allows re-validation (Requirement 4.3)
+      if (hasError) {
+        setHasError(false);
+        setErrorField(null);
+        setLastErrorType(null);
+      }
     };
 
   const handleJoinCommunity = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Prevent form resubmission if there's an active error state (Requirement 4.2)
+    if (hasError && lastErrorType === ERROR_TYPES.DUPLICATE_CLIENT) {
+      toast.error("Please resolve the email issue before submitting again", {
+        description:
+          "Use a different email address or sign in to your existing account.",
+      });
+      return;
+    }
+
+    // Clear previous error state
+    setHasError(false);
+    setErrorField(null);
+    setLastErrorType(null);
 
     // Validate required fields
     if (!formData.name || !formData.email) {
@@ -88,10 +114,17 @@ export function JoinNowFormSection() {
         }),
       });
 
-      const checkoutData = await checkoutResponse.json();
+      const checkoutData: CheckoutResponse = await checkoutResponse.json();
+
       if (checkoutData.url) {
+        // Success - redirect to checkout
         window.location.href = checkoutData.url;
+      } else if (checkoutData.error && checkoutData.errorType) {
+        // Handle different error types with specific messaging and behavior
+        handleCheckoutError(checkoutData);
+        setIsLoading(false);
       } else {
+        // Fallback for unexpected error format
         toast.error(checkoutData.error ?? "Something went wrong");
         setIsLoading(false);
       }
@@ -99,6 +132,74 @@ export function JoinNowFormSection() {
       console.error("Join community error:", error);
       toast.error("Something went wrong. Please try again.");
       setIsLoading(false);
+    }
+  };
+
+  const handleCheckoutError = (errorResponse: CheckoutResponse) => {
+    const { error, errorType, details } = errorResponse;
+
+    // Set error state to prevent form resubmission and highlight problematic field
+    setHasError(true);
+    setLastErrorType(errorType || null);
+
+    // Set error field for highlighting (email field for duplicate client errors)
+    if (errorType === ERROR_TYPES.DUPLICATE_CLIENT) {
+      setErrorField("email");
+    } else if (details?.field) {
+      setErrorField(details.field);
+    }
+
+    switch (errorType) {
+      case ERROR_TYPES.DUPLICATE_CLIENT:
+        // Specific toast notification for duplicate client errors (Requirement 4.1)
+        toast.error("Email Already Registered", {
+          description:
+            error ||
+            "This email is already registered. Please sign in to your account or use a different email.",
+          duration: 8000, // Longer duration for important message
+          action: {
+            label: "Sign In",
+            onClick: () => {
+              // Could redirect to sign-in page or open sign-in modal
+              window.location.href = "/sign-in";
+            },
+          },
+        });
+        break;
+
+      case ERROR_TYPES.VALIDATION_ERROR:
+        // Validation error with field-specific feedback
+        toast.error("Validation Error", {
+          description: error || "Please check your input and try again.",
+          duration: 4000,
+        });
+        break;
+
+      case ERROR_TYPES.SERVER_ERROR:
+        // Server error with retry suggestion
+        toast.error("Server Error", {
+          description:
+            error || "Unable to process your request. Please try again.",
+          duration: 5000,
+          action: {
+            label: "Retry",
+            onClick: () => {
+              // Clear error state and allow retry
+              setHasError(false);
+              setErrorField(null);
+              setLastErrorType(null);
+            },
+          },
+        });
+        break;
+
+      default:
+        // Fallback for unknown error types
+        toast.error("Error", {
+          description: error || "Something went wrong. Please try again.",
+          duration: 4000,
+        });
+        break;
     }
   };
 
@@ -129,59 +230,112 @@ export function JoinNowFormSection() {
           <form onSubmit={handleJoinCommunity} className="flex flex-col gap-4">
             {/* First row: Name and Email */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {joinFormFields.slice(0, 2).map((field) => (
-                <div key={field.id + "ne"} className="space-y-2">
-                  <Label htmlFor={field.id} className="text-sm font-semibold">
-                    {field.label}{" "}
-                    {field.required && (
-                      <span className="text-destructive">*</span>
+              {joinFormFields.slice(0, 2).map((field) => {
+                const hasFieldError = hasError && errorField === field.id;
+                return (
+                  <div key={field.id + "ne"} className="space-y-2">
+                    <Label htmlFor={field.id} className="text-sm font-semibold">
+                      {field.label}{" "}
+                      {field.required && (
+                        <span className="text-destructive">*</span>
+                      )}
+                    </Label>
+                    <Input
+                      id={field.id}
+                      type={field.type}
+                      placeholder={field.placeholder}
+                      value={formData[field.id as keyof JoinFormData]}
+                      onChange={handleInputChange(
+                        field.id as keyof JoinFormData
+                      )}
+                      className={`h-12 bg-muted/50 border focus:bg-background ${
+                        hasFieldError
+                          ? "border-destructive focus:border-destructive"
+                          : "border-border focus:border-primary"
+                      }`}
+                      required={field.required}
+                      aria-invalid={hasFieldError}
+                      aria-describedby={
+                        hasFieldError ? `${field.id}-error` : undefined
+                      }
+                    />
+                    {hasFieldError && (
+                      <p
+                        id={`${field.id}-error`}
+                        className="text-sm text-destructive"
+                        role="alert"
+                      >
+                        Please check this field and try again.
+                      </p>
                     )}
-                  </Label>
-                  <Input
-                    id={field.id}
-                    type={field.type}
-                    placeholder={field.placeholder}
-                    value={formData[field.id as keyof JoinFormData]}
-                    onChange={handleInputChange(field.id as keyof JoinFormData)}
-                    className="h-12 bg-muted/50 border border-border focus:border-primary focus:bg-background"
-                    required={field.required}
-                  />
-                </div>
-              ))}
+                  </div>
+                );
+              })}
             </div>
 
             {/* Second row: Phone and Location */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {joinFormFields.slice(2, 4).map((field) => (
-                <div key={field.id + "pl"} className="space-y-2">
-                  <Label htmlFor={field.id} className="text-sm font-semibold">
-                    {field.label}{" "}
-                    {field.required && (
-                      <span className="text-destructive">*</span>
+              {joinFormFields.slice(2, 4).map((field) => {
+                const hasFieldError = hasError && errorField === field.id;
+                return (
+                  <div key={field.id + "pl"} className="space-y-2">
+                    <Label htmlFor={field.id} className="text-sm font-semibold">
+                      {field.label}{" "}
+                      {field.required && (
+                        <span className="text-destructive">*</span>
+                      )}
+                    </Label>
+                    <Input
+                      id={field.id}
+                      type={field.type}
+                      placeholder={field.placeholder}
+                      value={formData[field.id as keyof JoinFormData]}
+                      onChange={handleInputChange(
+                        field.id as keyof JoinFormData
+                      )}
+                      className={`h-12 bg-muted/50 border focus:bg-background ${
+                        hasFieldError
+                          ? "border-destructive focus:border-destructive"
+                          : "border-border focus:border-primary"
+                      }`}
+                      required={field.required}
+                      aria-invalid={hasFieldError}
+                      aria-describedby={
+                        hasFieldError ? `${field.id}-error` : undefined
+                      }
+                    />
+                    {hasFieldError && (
+                      <p
+                        id={`${field.id}-error`}
+                        className="text-sm text-destructive"
+                        role="alert"
+                      >
+                        Please check this field and try again.
+                      </p>
                     )}
-                  </Label>
-                  <Input
-                    id={field.id}
-                    type={field.type}
-                    placeholder={field.placeholder}
-                    value={formData[field.id as keyof JoinFormData]}
-                    onChange={handleInputChange(field.id as keyof JoinFormData)}
-                    className="h-12 bg-muted/50 border border-border focus:border-primary focus:bg-background"
-                    required={field.required}
-                  />
-                </div>
-              ))}
+                  </div>
+                );
+              })}
             </div>
 
             <Button
               type="submit"
-              disabled={isLoading}
+              disabled={
+                isLoading ||
+                (hasError && lastErrorType === ERROR_TYPES.DUPLICATE_CLIENT)
+              }
               className="w-full h-14 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              aria-describedby={hasError ? "form-error-message" : undefined}
             >
               {isLoading ? (
                 <>
                   <Loader2 className="w-5 h-5 mr-2 animate-spin" />
                   Redirecting to Checkout...
+                </>
+              ) : hasError && lastErrorType === ERROR_TYPES.DUPLICATE_CLIENT ? (
+                <>
+                  <UserRoundCheck strokeWidth={2} className="w-5 h-5 mr-2" />
+                  Please Use Different Email
                 </>
               ) : (
                 <>
@@ -190,6 +344,39 @@ export function JoinNowFormSection() {
                 </>
               )}
             </Button>
+
+            {/* Error state message for screen readers */}
+            {hasError && (
+              <div
+                id="form-error-message"
+                className="sr-only"
+                role="status"
+                aria-live="polite"
+              >
+                {lastErrorType === ERROR_TYPES.DUPLICATE_CLIENT
+                  ? "This email is already registered. Please use a different email address or sign in to your existing account."
+                  : "There was an error with your submission. Please check the highlighted fields and try again."}
+              </div>
+            )}
+
+            {/* Visual error message for duplicate client */}
+            {hasError && lastErrorType === ERROR_TYPES.DUPLICATE_CLIENT && (
+              <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4 text-center">
+                <p className="text-sm text-destructive font-medium">
+                  This email is already registered
+                </p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Please use a different email address or{" "}
+                  <button
+                    type="button"
+                    onClick={() => (window.location.href = "/sign-in")}
+                    className="text-primary hover:underline font-medium"
+                  >
+                    sign in to your existing account
+                  </button>
+                </p>
+              </div>
+            )}
           </form>
 
           <div className="pt-4 space-y-4">
