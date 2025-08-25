@@ -1,7 +1,12 @@
+import { validateApplicationStartupSync } from "@/lib/startup-validator";
+import ConfigValidator from "@/components/ConfigValidator";
 import { Space_Grotesk, Roboto } from "next/font/google";
 import type { Metadata } from "next";
 import { Toaster } from "sonner";
 import "./globals.css";
+
+// Run server-side configuration validation on startup
+validateApplicationStartupSync();
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -33,6 +38,7 @@ export default function RootLayout({
       <body
         className={`${spaceGrotesk.variable} ${roboto.className} antialiased`}
       >
+        <ConfigValidator />
         {children}
         <Toaster />
       </body>

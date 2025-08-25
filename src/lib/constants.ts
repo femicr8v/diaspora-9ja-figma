@@ -44,6 +44,13 @@ export const logoImage: string = "/logo.png";
 export const suppotMail: string = "femicr8v@gmail.com";
 export const suppotTellephone: string = "+442079460958";
 
+// Email Configuration
+export const adminEmail: string = "femicr8v@gmail.com";
+export const emailConfig = {
+  fromEmail: "onboarding@resend.dev", // Using Resend's verified domain for now (fromEmail: "noreply@diaspora9ja.com")
+  fromName: "Diaspora9ja Community",
+};
+
 export const promoImage: string = "/api/placeholder/600/400";
 export const communityGridImage: string = "/api/placeholder/800/600";
 

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { emailService, LeadNotificationData } from "@/lib/email-service";
 
 export const runtime = "nodejs";
 
@@ -48,6 +49,48 @@ export async function POST(req: Request) {
     }
 
     console.log(`✅ Lead saved: ${email} - ${name}`);
+
+    // Send email notifications asynchronously (don't block the response)
+    const leadData: LeadNotificationData = {
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      location: data.location,
+      createdAt: new Date(data.created_at).toISOString(),
+    };
+
+    // Send emails asynchronously without blocking the API response
+    setImmediate(async () => {
+      try {
+        const emailPromises = [
+          emailService.sendLeadCreatedAdminNotification(leadData),
+          emailService.sendLeadCreatedUserWelcome(leadData),
+        ];
+
+        const results = await emailService.sendEmailsAsync(emailPromises);
+
+        // Log results but don't affect the main flow
+        results.forEach((result, index) => {
+          const emailType = index === 0 ? "admin notification" : "user welcome";
+          if (!result.success) {
+            console.error(
+              `Failed to send ${emailType} email for lead ${data.id}:`,
+              result.error
+            );
+          } else {
+            console.log(
+              `✅ ${emailType} email sent successfully for lead ${data.id}`
+            );
+          }
+        });
+      } catch (error) {
+        console.error(
+          `Failed to send lead creation emails for lead ${data.id}:`,
+          error
+        );
+      }
+    });
+
     return NextResponse.json({ success: true, leadId: data.id });
   } catch (error) {
     console.error("Lead creation error:", error);
